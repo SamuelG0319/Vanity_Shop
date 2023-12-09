@@ -24,7 +24,7 @@ if (isset($_POST['register'])) {
             $selectedUser = $verifyUser->fetch(PDO::FETCH_ASSOC);
 
             if ($username == $selectedUser['user']) {
-                '<script> alert("Usuario existente"); </script>';
+                echo '<script> alert("Usuario existente"); </script>';
             } else {
                 $insertUser = "insert into user (user, password, name, last_name, email, address, phone) values (:user, :password, :name, :last_name, :email, :address, :phone)";
                 $prepareUser = $dbconn->prepare($insertUser);
@@ -34,7 +34,7 @@ if (isset($_POST['register'])) {
                 if ($createUser) {
                     session_start();
                     $_SESSION['user'] = $username;
-                    header("Location: indext.html");
+                    header("Location: index.html");
                 } else {
                     echo 'Llena todos los campos';
                 }
@@ -42,6 +42,7 @@ if (isset($_POST['register'])) {
         }
     }
 }
+
 ?>
 
 <!DOCTYPE html>
