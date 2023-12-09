@@ -251,7 +251,7 @@
                                             <!-- Product Description -->
                                             <div class="product-description">
                                                 <span><?php echo $row['brand']; ?></span>
-                                                <a href="single-product-details.html">
+                                                <a href="single-product.php?id=<?php echo $row['product_code']; ?>">
                                                     <h6><?php echo $row['name']; ?></h6>
                                                 </a>
                                                 <p class="product-price">
