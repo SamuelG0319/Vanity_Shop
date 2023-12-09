@@ -17,11 +17,7 @@
     <title>Vanity - Tu tienda de ropa</title>
 
     <!-- Favicon  -->
-<<<<<<< Updated upstream:index.html
-    <link rel="icon" href="assets/img/core-img/favicon.ico">
-=======
     <link rel="icon" href="assets/img/core-img/logo.png">
->>>>>>> Stashed changes:index.php
 
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="assets/css/core-style.css">
@@ -36,11 +32,7 @@
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-<<<<<<< Updated upstream:index.html
-                <a class="nav-brand" href="index.html"><img src="assets/img/core-img/logo.png" alt=""></a>
-=======
                 <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px" width="100px"></a>
->>>>>>> Stashed changes:index.php
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -54,58 +46,10 @@
                     <!-- Nav Start -->
                     <div class="classynav">
                         <ul>
-<<<<<<< Updated upstream:index.html
-                            <li><a href="#">Shop</a>
-                                <div class="megamenu">
-                                    <ul class="single-mega cn-col-4">
-                                        <li class="title">Women's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Blouses &amp; Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Rompers</a></li>
-                                        <li><a href="shop.html">Bras &amp; Panties</a></li>
-                                    </ul>
-                                    <ul class="single-mega cn-col-4">
-                                        <li class="title">Men's Collection</li>
-                                        <li><a href="shop.html">T-Shirts</a></li>
-                                        <li><a href="shop.html">Polo</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
-                                    </ul>
-                                    <ul class="single-mega cn-col-4">
-                                        <li class="title">Kid's Collection</li>
-                                        <li><a href="shop.html">Dresses</a></li>
-                                        <li><a href="shop.html">Shirts</a></li>
-                                        <li><a href="shop.html">T-shirts</a></li>
-                                        <li><a href="shop.html">Jackets</a></li>
-                                        <li><a href="shop.html">Trench</a></li>
-                                    </ul>
-                                    <div class="single-mega cn-col-4">
-                                        <img src="assets/img/bg-img/bg-6.jpg" alt="">
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="single-product-details.html">Product Details</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
-                                    <li><a href="single-blog.html">Single Blog</a></li>
-                                    <li><a href="regular-page.html">Regular Page</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
-=======
                             <li><a href="tops.php">Partes de arriba</a></li>
                             <li><a href="bottom.php">Partes de abajo</a></li>
                             <li><a href="shoes.php">Zapatos</a></li>
                             <li><a href="accesories.php">Accesorios</a></li>
->>>>>>> Stashed changes:index.php
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -114,20 +58,6 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
-<<<<<<< Updated upstream:index.html
-                <!-- Search Area -->
-                <div class="search-area">
-                    <form action="#" method="post">
-                        <input type="search" name="search" id="headerSearch" placeholder="Type for search">
-                        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                    </form>
-                </div>
-                <!-- Favourite Area -->
-                <div class="favourite-area">
-                    <a href="#"><img src="assets/img/core-img/heart.svg" alt=""></a>
-                </div>
-=======
->>>>>>> Stashed changes:index.php
                 <!-- User Login Info -->
                 <div class="user-login-info">
                     <a href="#"><img src="assets/img/core-img/user.svg" alt=""></a>
@@ -318,99 +248,6 @@
                 <div class="col-12">
                     <div class="popular-products-slides owl-carousel">
 
-<<<<<<< Updated upstream:index.html
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="assets/img/product-img/product-1.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="assets/img/product-img/product-2.jpg" alt="">
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>topshop</span>
-                                <a href="single-product-details.html">
-                                    <h6>Knot Front Mini Dress</h6>
-                                </a>
-                                <p class="product-price">$80.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="assets/img/product-img/product-2.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="assets/img/product-img/product-3.jpg" alt="">
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>topshop</span>
-                                <a href="single-product-details.html">
-                                    <h6>Poplin Displaced Wrap Dress</h6>
-                                </a>
-                                <p class="product-price">$80.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="assets/img/product-img/product-3.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="assets/img/product-img/product-4.jpg" alt="">
-
-                                <!-- Product Badge -->
-                                <div class="product-badge offer-badge">
-                                    <span>-30%</span>
-                                </div>
-
-                                <!-- Favourite -->
-                                <div class="product-favourite">
-                                    <a href="#" class="favme fa fa-heart"></a>
-                                </div>
-                            </div>
-                            <!-- Product Description -->
-                            <div class="product-description">
-                                <span>mango</span>
-                                <a href="single-product-details.html">
-                                    <h6>PETITE Crepe Wrap Mini Dress</h6>
-                                </a>
-                                <p class="product-price"><span class="old-price">$75.00</span> $55.00</p>
-
-                                <!-- Hover Content -->
-                                <div class="hover-content">
-                                    <!-- Add to Cart -->
-                                    <div class="add-to-cart-btn">
-                                        <a href="#" class="btn essence-btn">Add to Cart</a>
-=======
                         <?php
 
                         global $dbconn;
@@ -445,7 +282,6 @@
                                                 <a href="#" class="btn essence-btn">Add to Cart</a>
                                             </div>
                                         </div>
->>>>>>> Stashed changes:index.php
                                     </div>
                                 </div>
                         <?php
@@ -454,24 +290,9 @@
                             echo "No hay productos disponibles.";
                         }
 
-<<<<<<< Updated upstream:index.html
-                        <!-- Single Product -->
-                        <div class="single-product-wrapper">
-                            <!-- Product Image -->
-                            <div class="product-img">
-                                <img src="assets/img/product-img/product-4.jpg" alt="">
-                                <!-- Hover Thumb -->
-                                <img class="hover-img" src="assets/img/product-img/product-5.jpg" alt="">
-
-                                <!-- Product Badge -->
-                                <div class="product-badge new-badge">
-                                    <span>New</span>
-                                </div>
-=======
                         // Cerrar la conexión a la base de datos
                         $conn->close();
                         ?>
->>>>>>> Stashed changes:index.php
 
                         
                         </div>
@@ -520,11 +341,7 @@
                     <div class="single_widget_area d-flex mb-30">
                         <!-- Logo -->
                         <div class="footer-logo mr-50">
-<<<<<<< Updated upstream:index.html
-                            <a href="#"><img src="assets/img/core-img/logo2.png" alt=""></a>
-=======
                             <a href="#"><img src="assets/img/core-img/logo.png" alt="" height="100px" width="100px"></a>
->>>>>>> Stashed changes:index.php
                         </div>
                         <!-- Footer Menu -->
                         <div class="footer_menu">
