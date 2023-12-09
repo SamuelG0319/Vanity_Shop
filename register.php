@@ -74,6 +74,9 @@ if (isset($_POST['signup'])) {
     <!-- link references -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 
     <!-- css references -->
     <link rel="stylesheet" href="assets/css/core-style.css">
@@ -102,6 +105,7 @@ if (isset($_POST['signup'])) {
                             <input type="text" name="lastname" id="lastname" placeholder="Apellido" />
                         </div>
                         <!-- username -->
+                        <span id="check_username"></span>
                         <div class="form-group">
                             <label for="username"><span class="material-symbols-outlined">alternate_email</span></label>
                             <input type="text" name="username" id="username" placeholder="Usuario" />
@@ -154,15 +158,37 @@ if (isset($_POST['signup'])) {
 
     <script>
         const checkbox = document.getElementById('check-24');
-        const box      = document.getElementById('company_code');
+        const box = document.getElementById('company_code');
 
-        checkbox.addEventListener('click', function handleClick(){
-            if(checkbox.checked){
+        checkbox.addEventListener('click', function handleClick() {
+            if (checkbox.checked) {
                 box.style.display = 'block';
             } else {
                 box.style.display = 'none';
             }
         });
+
+        $(document).ready(function () {
+            $('#username').blur(function () {
+                var username = $(this).val();
+
+                $.ajax({
+                    url: 'check.php',
+                    method: "POST",
+                    data: { user_name: username },
+                    success: function (data) {
+                        if (data != '0') {
+                            $('#check_username').html('<span class="text-danger">Usuario no disponible</span>');
+                            $('#signup').attr("disabled", true);
+                        } else {
+                            $('#check_username').html('<span class="text-success">Usuario disponible</span>');
+                            $('#signup').attr("disabled", false);
+                        }
+                    }
+                });
+            });
+        });
+
     </script>
 </body>
 
