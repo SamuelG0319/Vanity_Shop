@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
-  `cod_admin` varchar(4) NOT NULL,
+  `cod_admin` int NOT NULL,
   `username` varchar(25) NOT NULL,
   `password` varchar(255) NOT NULL,
   `name` varchar(15) NOT NULL,
@@ -45,8 +45,8 @@ CREATE TABLE `admin` (
 --
 
 CREATE TABLE `cart` (
-  `cart_id` varchar(20) NOT NULL,
-  `cod_user` varchar(4) NOT NULL,
+  `cart_id` int NOT NULL,
+  `cod_user` int NOT NULL,
   `created_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -58,7 +58,7 @@ CREATE TABLE `cart` (
 
 CREATE TABLE `cart_item` (
   `item_id` int NOT NULL,
-  `cart_id` varchar(20) NOT NULL,
+  `cart_id`int NOT NULL,
   `product_code` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -81,7 +81,7 @@ CREATE TABLE `company` (
 
 CREATE TABLE `order_detail` (
   `order_id` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `cod_user` varchar(4) NOT NULL,
+  `cod_user` int NOT NULL,
   `order_time` date NOT NULL,
   `retail_price` decimal(10,2) NOT NULL,
   `sales_tax` decimal(10,2) NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE `products_line` (
 --
 
 CREATE TABLE `user` (
-  `cod_user` varchar(4) NOT NULL,
+  `cod_user` int NOT NULL,
   `company_code` varchar(4) DEFAULT NULL,
   `user` varchar(25) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -197,10 +197,28 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `admin`
+--
+ALTER TABLE `admin`
+  MODIFY `cod_admin` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `cart_id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `cart_item`
 --
 ALTER TABLE `cart_item`
   MODIFY `item_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `user`
+--
+ALTER TABLE `user`
+  MODIFY `cod_user` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
