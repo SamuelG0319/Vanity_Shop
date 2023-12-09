@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
 
     <?php
     require_once('dbconn.php');
     ?>
-
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,7 +13,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title  -->
-    <title>Vanity - Tu tienda de ropa</title>
+    <title>Vanity - Accesorios</title>
 
     <!-- Favicon  -->
     <link rel="icon" href="assets/img/core-img/logo.png">
@@ -153,157 +152,159 @@
     </div>
     <!-- ##### Right Side Cart End ##### -->
 
-    <!-- ##### Welcome Area Start ##### -->
-    <section class="welcome_area bg-img background-overlay" style="background-image: url(assets/img/bg-img/bg-1.jpg);">
+    <!-- ##### Breadcumb Area Start ##### -->
+    <div class="breadcumb_area bg-img" style="background-image: url(assets/img/bg-img/breadcumb.jpg);">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
-                    <div class="hero-content">
-                        <h5>micasa</h5>
-                        <h2>Vanity Shop</h2>
-                        <h6>Tu tienda de ropa online</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ##### Welcome Area End ##### -->
-
-    <!-- ##### Top Catagory Area Start ##### -->
-    <div class="top_catagory_area section-padding-80 clearfix">
-        <div class="container">
-            <div class="row justify-content-center">
-
-                <!-- Single Category -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-2.jpg);">
-                        <div class="catagory-content">
-                            <a href="tops.php">Partes de arriba</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Category -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-5.jpg);">
-                        <div class="catagory-content">
-                            <a href="bottom.php">Partes de abajo</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Category -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-3.jpg);">
-                        <div class="catagory-content">
-                            <a href="shoes.php">Zapatos</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Single Category -->
-                <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-4.jpg);">
-                        <div class="catagory-content">
-                            <a href="accesories.php">Accesorios</a>
-                        </div>
+                    <div class="page-title text-center">
+                        <h2>Accesorios</h2>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ##### Top Catagory Area End ##### -->
+    <!-- ##### Breadcumb Area End ##### -->
 
-    <!-- ##### New Arrivals Area Start ##### -->
-    <section class="new_arrivals_area section-padding-80 clearfix">
+    <!-- ##### Shop Grid Area Start ##### -->
+    <section class="shop_grid_area section-padding-80">
         <div class="container">
             <div class="row">
-                <div class="col-12">
-                    <div class="section-heading text-center">
-                        <h2>Productos Populares</h2>
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="shop_sidebar_area">
+
+                        <!-- ##### Single Widget ##### -->
+                        <div class="widget brands mb-50">
+                            <!-- Widget Title 2 -->
+                            <p class="widget-title2 mb-30">Marcas</p>
+                            <div class="widget-desc">
+                                <ul>
+                                    <?php
+                                    // Obtener todas las marcas distintas
+                                    $brandQuery = "SELECT DISTINCT brand FROM products WHERE product_line = 'accesories'";
+                                    $brandStmt = $dbconn->query($brandQuery);
+
+                                    // Verificar si hay marcas
+                                    if ($brandStmt->rowCount() > 0) {
+                                        // Iterar sobre las marcas y mostrar cada una
+                                        while ($brandRow = $brandStmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $brand = $brandRow['brand'];
+                                    ?>
+                                            <li><a href="?brand=<?php echo $brand; ?>"><?php echo $brand; ?></a></li>
+                                    <?php
+                                        }
+                                    } else {
+                                        echo "No hay marcas disponibles.";
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="popular-products-slides owl-carousel">
+                <div class="col-12 col-md-8 col-lg-9">
+                    <div class="shop_grid_product_area">
+                        <div class="row">
 
-                        <?php
-                        // Obtener todos los productos
-                        $query = "SELECT * FROM products ORDER BY RAND() LIMIT 10";
-                        $stmt = $dbconn->query($query);
+                            <?php
 
-                        // Verificar si hay productos
-                        if ($stmt->rowCount() > 0) {
-                            // Iterar sobre los productos y mostrar cada uno
-                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                        ?>
-                                <!-- Single Product -->
-                                <div class="single-product-wrapper">
-                                    <!-- Product Image -->
-                                    <div class="product-img">
-                                        <img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
-                                        <!-- Hover Thumb -->
-                                        <img class="hover-img" src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
-                                    </div>
-                                    <!-- Product Description -->
-                                    <div class="product-description">
-                                        <span><?php echo $row['brand']; ?></span>
-                                        <a href="single-product-details.html">
-                                            <h6><?php echo $row['name']; ?></h6>
-                                        </a>
-                                        <p class="product-price">$<?php echo $row['price']; ?></p>
+                            // Obtener la marca seleccionada (si hay una)
+                            $selectedBrand = isset($_GET['brand']) ? $_GET['brand'] : '';
 
-                                        <!-- Hover Content -->
-                                        <div class="hover-content">
-                                            <!-- Add to Cart -->
-                                            <div class="add-to-cart-btn">
-                                                <a href="#" class="btn essence-btn">Add to Cart</a>
+                            // Construir la consulta SQL basada en la marca seleccionada
+                            $query = "SELECT * FROM products WHERE product_line = 'accesories'";
+                            if (!empty($selectedBrand)) {
+                                $query .= " AND brand = :brand";
+                            }
+
+                            // Agregar limitación para la paginación
+                            $query .= " LIMIT 25";
+
+                            // Preparar la consulta
+                            $stmt = $dbconn->prepare($query);
+
+                            // Vincular la marca si está presente en la consulta
+                            if (!empty($selectedBrand)) {
+                                $stmt->bindParam(':brand', $selectedBrand, PDO::PARAM_STR);
+                            }
+
+                            // Ejecutar la consulta
+                            $stmt->execute();
+
+                            // Verificar si hay productos
+                            if ($stmt->rowCount() > 0) {
+                                // Iterar sobre los productos y mostrar cada uno
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            ?>
+                                    <!-- Single Product -->
+                                    <div class="col-12 col-sm-6 col-lg-4">
+                                        <div class="single-product-wrapper">
+                                            <!-- Product Image -->
+                                            <div class="product-img">
+                                                <img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                                                <!-- Hover Thumb -->
+                                                <img class="hover-img" src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                                            </div>
+
+                                            <!-- Product Description -->
+                                            <div class="product-description">
+                                                <span><?php echo $row['brand']; ?></span>
+                                                <a href="single-product-details.html">
+                                                    <h6><?php echo $row['name']; ?></h6>
+                                                </a>
+                                                <p class="product-price">
+                                                    $<?php echo $row['price']; ?>
+                                                </p>
+
+                                                <!-- Hover Content -->
+                                                <div class="hover-content">
+                                                    <!-- Add to Cart -->
+                                                    <div class="add-to-cart-btn">
+                                                        <a href="#" class="btn essence-btn">Add to Cart</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                        <?php
+                            <?php
+                                }
+                            } else {
+                                echo "No hay productos disponibles para la línea 'accesories'.";
                             }
-                        } else {
-                            echo "No hay productos disponibles.";
-                        }
-                        ?>
+                            ?>
+
+                        </div>
                     </div>
+                    <!-- Pagination -->
+                    <nav aria-label="navigation">
+                        <ul class="pagination mt-50 mb-70">
+                            <?php
+                            // Obtener el número total de productos sin límite
+                            $totalQuery = "SELECT COUNT(*) as total FROM products WHERE product_line = 'accesories'";
+                            $totalStmt = $dbconn->query($totalQuery);
+                            $totalRow = $totalStmt->fetch(PDO::FETCH_ASSOC);
+                            $totalProducts = $totalRow['total'];
+
+                            // Calcular el número total de páginas
+                            $totalPages = ceil($totalProducts / 25);
+
+                            // Iterar sobre las páginas
+                            for ($i = 1; $i <= $totalPages; $i++) {
+                            ?>
+                                <li class="page-item"><a class="page-link" href="?page=<?php echo $i; ?>&brand=<?php echo $selectedBrand; ?>"><?php echo $i; ?></a></li>
+                            <?php
+                            }
+                            ?>
+
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
     </section>
-    <!-- ##### New Arrivals Area End ##### -->
-
-    <!-- ##### Brands Area Start ##### -->
-    <div class="brands-area d-flex align-items-center justify-content-between">
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand1.png" alt="">
-        </div>
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand2.png" alt="">
-        </div>
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand3.png" alt="">
-        </div>
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand4.png" alt="">
-        </div>
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand5.png" alt="">
-        </div>
-        <!-- Brand Logo -->
-        <div class="single-brands-logo">
-            <img src="assets/img/core-img/brand6.png" alt="">
-        </div>
-    </div>
-    <!-- ##### Brands Area End ##### -->
+    <!-- ##### Shop Grid Area End ##### -->
 
     <!-- ##### Footer Area Start ##### -->
     <footer class="footer_area clearfix">
