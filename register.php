@@ -7,6 +7,7 @@ if (isset($_POST['signup'])) {
         isset($_POST['name']) && isset($_POST['lastname']) && isset($_POST['username']) && isset($_POST['email']) &&
         isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['password'])
     ) {
+        //Removing blank spaces.
         $name = trim($_POST['name']);
         $lastname = trim($_POST['lastname']);
         $username = trim($_POST['username']);
@@ -15,6 +16,7 @@ if (isset($_POST['signup'])) {
         $phone = trim($_POST['phone']);
         $password = trim($_POST['password']);
 
+        //Checking if 'code' has a value or is null.
         $code = isset($_POST['code']) ? $_POST['code'] : null;
 
         if (
@@ -38,8 +40,6 @@ if (isset($_POST['signup'])) {
                         session_start();
                         $_SESSION['user'] = $username;
                         header("Location: index.php");
-                    } else {
-                        echo 'Llena todos los campos';
                     }
                 } else {
                     $insertUser = "insert into user (user, password, name, last_name, email, address, phone) values (:user, :password, :name, :last_name, :email, :address, :phone)";
@@ -51,8 +51,6 @@ if (isset($_POST['signup'])) {
                         session_start();
                         $_SESSION['user'] = $username;
                         header("Location: index.php");
-                    } else {
-                        echo 'Llena todos los campos';
                     }
                 }
             }
@@ -62,8 +60,8 @@ if (isset($_POST['signup'])) {
 
 ?>
 
+<!-- --------------- HTML section --------------- -->
 <!DOCTYPE html>
-
 <html lang="es" dir="ltr">
 
 <head>
@@ -74,9 +72,7 @@ if (isset($_POST['signup'])) {
     <!-- link references -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
     <!-- css references -->
     <link rel="stylesheet" href="assets/css/core-style.css">
@@ -97,39 +93,39 @@ if (isset($_POST['signup'])) {
                         <!-- user name -->
                         <div class="form-group">
                             <label for="name"><span class="material-symbols-outlined">face</span></i></label>
-                            <input type="text" name="name" id="name" placeholder="Nombre" />
+                            <input type="text" name="name" id="name" placeholder="Nombre" required />
                         </div>
                         <!-- user lastname -->
                         <div class="form-group">
                             <label for="lastname"><span class="material-symbols-outlined">face</span></label>
-                            <input type="text" name="lastname" id="lastname" placeholder="Apellido" />
+                            <input type="text" name="lastname" id="lastname" placeholder="Apellido" required />
                         </div>
                         <!-- username -->
                         <span id="check_username"></span>
                         <div class="form-group">
                             <label for="username"><span class="material-symbols-outlined">alternate_email</span></label>
-                            <input type="text" name="username" id="username" placeholder="Usuario" />
+                            <input type="text" name="username" id="username" placeholder="Usuario" required />
                         </div>
                         <!-- user email -->
                         <div class="form-group">
                             <label for="email"><span class="material-symbols-outlined">mail</span></label>
-                            <input type="email" name="email" id="email" placeholder="Correo electrónico" />
+                            <input type="email" name="email" id="email" placeholder="Correo electrónico" required />
                         </div>
                         <!-- user address -->
                         <div class="form-group">
                             <label for="address"><span class="material-symbols-outlined">home</span></label>
-                            <input type="text" name="address" id="address" placeholder="Dirección" />
+                            <input type="text" name="address" id="address" placeholder="Dirección" required />
                         </div>
                         <!-- user phone number -->
                         <div class="form-group">
                             <label for="phone"><span class="material-symbols-outlined">call</span></label>
                             <input type="text" name="phone" id="phone" pattern="[0-9]{4}-[0-9]{4}"
-                                placeholder="Teléfono" />
+                                placeholder="Teléfono" required />
                         </div>
                         <!-- user password -->
                         <div class="form-group">
                             <label for="password"><span class="material-symbols-outlined">password</span></label>
-                            <input type="password" name="password" id="password" placeholder="Contraseña" />
+                            <input type="password" name="password" id="password" placeholder="Contraseña" required />
                         </div><br>
                         <!-- Checkbox para indicar si es enviado por una empresa -->
                         <div name="company_checkbox" id="company_checkbox" class="checkbox-wrapper-24">
@@ -151,45 +147,14 @@ if (isset($_POST['signup'])) {
                 </div>
                 <div class="signup-image">
                     <figure><img src="assets/img/sign-up/clothing-sign.jpg" alt="sing up image"></figure>
+                    <a href="login.php" class="signup-image-link">Ya soy miembro</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <script>
-        const checkbox = document.getElementById('check-24');
-        const box = document.getElementById('company_code');
-
-        checkbox.addEventListener('click', function handleClick() {
-            if (checkbox.checked) {
-                box.style.display = 'block';
-            } else {
-                box.style.display = 'none';
-            }
-        });
-
-        $(document).ready(function () {
-            $('#username').blur(function () {
-                var username = $(this).val();
-
-                $.ajax({
-                    url: 'check.php',
-                    method: "POST",
-                    data: { user_name: username },
-                    success: function (data) {
-                        if (data != '0') {
-                            $('#check_username').html('<span class="text-danger">Usuario no disponible</span>');
-                            $('#signup').attr("disabled", true);
-                        } else {
-                            $('#check_username').html('<span class="text-success">Usuario disponible</span>');
-                            $('#signup').attr("disabled", false);
-                        }
-                    }
-                });
-            });
-        });
-
-    </script>
+    <!-- JavaScript section -->
+    <script src="assets/js/register.js"></script>
 </body>
 
 </html>
