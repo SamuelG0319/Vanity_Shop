@@ -249,31 +249,30 @@
                     <div class="popular-products-slides owl-carousel">
 
                         <?php
-
-                        global $dbconn;
                         // Obtener todos los productos
-                        $result = $dbconn->query('SELECT * FROM products');
+                        $query = "SELECT * FROM products";
+                        $stmt = $dbconn->query($query);
 
                         // Verificar si hay productos
-                        if ($result->rowCount() > 0) {
+                        if ($stmt->rowCount() > 0) {
                             // Iterar sobre los productos y mostrar cada uno
-                            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         ?>
                                 <!-- Single Product -->
                                 <div class="single-product-wrapper">
                                     <!-- Product Image -->
                                     <div class="product-img">
-                                        <img src="<?php echo $row["image"]; ?>" alt="">
+                                        <img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
                                         <!-- Hover Thumb -->
-                                        <img class="hover-img" src="<?php echo $row["image"]; ?>" alt="">
+                                        <img class="hover-img" src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
                                     </div>
                                     <!-- Product Description -->
                                     <div class="product-description">
-                                        <span><?php echo $row["brand"]; ?></span>
+                                        <span><?php echo $row['brand']; ?></span>
                                         <a href="single-product-details.html">
-                                            <h6><?php echo $row["name"]; ?></h6>
+                                            <h6><?php echo $row['name']; ?></h6>
                                         </a>
-                                        <p class="product-price">$<?php echo $row["price"]; ?></p>
+                                        <p class="product-price">$<?php echo $row['price']; ?></p>
 
                                         <!-- Hover Content -->
                                         <div class="hover-content">
@@ -289,13 +288,7 @@
                         } else {
                             echo "No hay productos disponibles.";
                         }
-
-                        // Cerrar la conexión a la base de datos
-                        $conn->close();
                         ?>
-
-                        
-                        </div>
                     </div>
                 </div>
             </div>
