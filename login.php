@@ -15,20 +15,47 @@ if (isset($_POST['signin'])) {
 
             if ($verifyUser->rowCount() > 0) {
                 $getData = $verifyUser->fetch(PDO::FETCH_ASSOC);
-                if ($username == $getData['user']) {
-                    if ($password == $getData['password']) {
-                        session_start();
-                        $_SESSION['user'] = $username;
-                        header("Location: index.php");
-                    } else {
-                        echo "<script> alert('Contraseña incorrecta'); </script>";
+                if ($username == $getData['user'] && $password == $getData['password']) {
+
+                    /*- Get user's attributes - */
+                    $userExist = $dbconn->prepare("select * from user where user = :user");
+                    $userExist->execute(['user' => $username]);
+                    $selectedUser = $verifyUser->fetchAll();
+
+                    /* - Getting attributes from db - */
+                    if ($selectedUser != '') {
+                        foreach ($selectedUser as $row) {
+                            $cod_user = $row['cod_user'];
+                            $company_code = $row['company_code'];
+                            $name = $row['name'];
+                            $lastname = $row['lastname'];
+                            $email = $row['email'];
+                            $address = $row['address'];
+                            $phone = $row['phone'];
+
+                            /* - Session variables - */
+                            session_start();
+                            $_SESSION['code_user'] = $cod_user;
+                            $_SESSION['company_code'] = $company_code;
+                            $_SESSION['user'] = $username;
+                            $_SESSION['password'] = $password;
+                            $_SESSION['name'] = $name;
+                            $_SESSION['lastname'] = $lastname;
+                            $_SESSION['email'] = $email;
+                            $_SESSION['address'] = $address;
+                            $_SESSION['phone'] = $phone;
+                        }
+                        echo json_encode(['status' => 'success', 'message' => 'Login exitoso']);
+                        exit();
                     }
                 }
             } else {
-                echo "<script> alert('Usuario no existente'); </script>";
+                echo json_encode(['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos']);
+                exit();
             }
         } else {
-            echo "<script> alert('Llene los campos'); </script>";
+            echo json_encode(['status' => 'error', 'message' => 'Llena los campos']);
+            exit();
         }
     }
 }
@@ -42,14 +69,14 @@ if (isset($_POST['signin'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
 
-    <!-- ----- Icons references ----- -->
+    <!-- link references -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Icons references -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <!-- ----- Fonts references ----- -->
-    <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css">
-
-    <!-- ----- CSS Styles ----- -->
+    <!-- CSS Styles -->
     <link rel="stylesheet" href="assets/css/register.css">
 </head>
 
@@ -90,6 +117,37 @@ if (isset($_POST['signin'])) {
             </div>
         </div>
     </section>
+
+    <!-- JavaScript section -->
+    <script>
+        $(document).ready(function () {
+            $("#login-form").submit(function (e) {
+                e.preventDefault();
+
+                var username = $("#username").val();
+                var password = $("#password").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "login.php",
+                    data: {
+                        signin: true,
+                        username: username,
+                        password: password
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        alert(response.message);
+
+                        if (response.status === "success") {
+                            window.location.href = "index.php"
+                            exit();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

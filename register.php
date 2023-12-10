@@ -38,7 +38,13 @@ if (isset($_POST['signup'])) {
 
                     if ($createUser) {
                         session_start();
+                        $_SESSION['cod_user'] = $cod_user;
+                        $_SESSION['company_code'] = $code;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['user'] = $username;
+                        $_SESSION['password'] = $password;
+                        $_SESSION['email'] = $email;
                         header("Location: index.php");
                     }
                 } else {
@@ -49,8 +55,14 @@ if (isset($_POST['signup'])) {
 
                     if ($createUser) {
                         session_start();
+                        $_SESSION['cod_user'] = $cod_user;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['user'] = $username;
+                        $_SESSION['password'] = $password;
+                        $_SESSION['email'] = $email;
                         header("Location: index.php");
+                        echo $name . $lastname . $cod_user . $email;
                     }
                 }
             }
@@ -117,6 +129,7 @@ if (isset($_POST['signup'])) {
                             <input type="text" name="address" id="address" placeholder="Dirección" required />
                         </div>
                         <!-- user phone number -->
+                        <span>Ej.: 6655-4499</span>
                         <div class="form-group">
                             <label for="phone"><span class="material-symbols-outlined">call</span></label>
                             <input type="text" name="phone" id="phone" pattern="[0-9]{4}-[0-9]{4}"
