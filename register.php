@@ -8,13 +8,13 @@ if (isset($_POST['signup'])) {
         isset($_POST['phone']) && isset($_POST['address']) && isset($_POST['password'])
     ) {
         //Removing blank spaces.
+        $username = trim($_POST['username']);
+        $password = trim($_POST['password']);
         $name = trim($_POST['name']);
         $lastname = trim($_POST['lastname']);
-        $username = trim($_POST['username']);
         $email = trim($_POST['email']);
         $address = trim($_POST['address']);
         $phone = trim($_POST['phone']);
-        $password = trim($_POST['password']);
 
         //Checking if 'code' has a value or is null.
         $code = isset($_POST['code']) ? $_POST['code'] : null;
@@ -40,11 +40,13 @@ if (isset($_POST['signup'])) {
                         session_start();
                         $_SESSION['cod_user'] = $cod_user;
                         $_SESSION['company_code'] = $code;
-                        $_SESSION['name'] = $name;
-                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['user'] = $username;
                         $_SESSION['password'] = $password;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['email'] = $email;
+                        $_SESSION['address'] = $address;
+                        $_SESSION['phone'] = $phone;
                         header("Location: index.php");
                     }
                 } else {
@@ -56,11 +58,13 @@ if (isset($_POST['signup'])) {
                     if ($createUser) {
                         session_start();
                         $_SESSION['cod_user'] = $cod_user;
-                        $_SESSION['name'] = $name;
-                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['user'] = $username;
                         $_SESSION['password'] = $password;
+                        $_SESSION['name'] = $name;
+                        $_SESSION['lastname'] = $lastname;
                         $_SESSION['email'] = $email;
+                        $_SESSION['address'] = $address;
+                        $_SESSION['phone'] = $phone;
                         header("Location: index.php");
                         echo $name . $lastname . $cod_user . $email;
                     }
