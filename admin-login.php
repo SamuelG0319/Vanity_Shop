@@ -65,11 +65,15 @@ if (isset($_POST['signin'])) {
     <!-- ---------- CSS References ----------- -->
     <link rel="stylesheet" type="text/css" href="assets/css/util.css">
     <link rel="stylesheet" type="text/css" href="assets/css/admin-login.css">
+
+    <!-- ---------- Fonts References ----------- -->
+    <link rel="stylesheet" type="text/css" href="assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+
 </head>
 
 <body>
     <div class="limiter">
-        <div class="container-login100" style="background-image: url('assets/img/sign-up/back.png');">
+        <div class="container-login100" style="background-image: url('assets/img/sign-up/back.jpeg');">
             <div class="wrap-login100 p-t-30 p-b-50">
                 <span class="login100-form-title p-b-41">
                     Bienvenido administrador
