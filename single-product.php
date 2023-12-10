@@ -13,7 +13,7 @@
         // Si ha iniciado sesión, guarda los datos en variables de sesión
         $user = $_SESSION['user'];
         $name = $_SESSION['name'];
-        $last_name = $_SESSION['last_name'];
+        $lastname = $_SESSION['lastname'];
         $cod_user = $_SESSION['cod_user'];
     }
 
