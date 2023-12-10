@@ -8,46 +8,16 @@ if (isset($_POST['signin'])) {
         $password = trim($_POST['password']);
 
         if (!empty($username) && !empty($password)) {
-            $verifyUser = $dbconn->prepare("SELECT user, password FROM user WHERE user = :user 
-            UNION 
-            SELECT username AS user, password FROM admin WHERE username = :user");
+            $verifyUser = $dbconn->prepare("SELECT * FROM user WHERE user = :user");
             $verifyUser->execute(['user' => $username]);
 
             if ($verifyUser->rowCount() > 0) {
                 $getData = $verifyUser->fetch(PDO::FETCH_ASSOC);
                 if ($username == $getData['user'] && $password == $getData['password']) {
+                    session_start();
+                    echo json_encode(['status' => 'success', 'message' => 'Login exitoso']);
+                    exit();
 
-                    /*- Get user's attributes - */
-                    $userExist = $dbconn->prepare("select * from user where user = :user");
-                    $userExist->execute(['user' => $username]);
-                    $selectedUser = $verifyUser->fetchAll();
-
-                    /* - Getting attributes from db - */
-                    if ($selectedUser != '') {
-                        foreach ($selectedUser as $row) {
-                            $cod_user = $row['cod_user'];
-                            $company_code = $row['company_code'];
-                            $name = $row['name'];
-                            $lastname = $row['lastname'];
-                            $email = $row['email'];
-                            $address = $row['address'];
-                            $phone = $row['phone'];
-
-                            /* - Session variables - */
-                            session_start();
-                            $_SESSION['code_user'] = $cod_user;
-                            $_SESSION['company_code'] = $company_code;
-                            $_SESSION['user'] = $username;
-                            $_SESSION['password'] = $password;
-                            $_SESSION['name'] = $name;
-                            $_SESSION['lastname'] = $lastname;
-                            $_SESSION['email'] = $email;
-                            $_SESSION['address'] = $address;
-                            $_SESSION['phone'] = $phone;
-                        }
-                        echo json_encode(['status' => 'success', 'message' => 'Login exitoso']);
-                        exit();
-                    }
                 }
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos']);
