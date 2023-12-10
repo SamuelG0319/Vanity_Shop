@@ -5,6 +5,17 @@
 
     <?php
     require_once('dbconn.php');
+
+    session_start();
+
+    // Verificar si el usuario ha iniciado sesión
+    if (isset($_SESSION['user'])) {
+        // Si ha iniciado sesión, guarda los datos en variables de sesión
+        $user = $_SESSION['user'];
+        $name = $_SESSION['name'];
+        $last_name = $_SESSION['last_name'];
+        $cod_user = $_SESSION['cod_user'];
+    }
     ?>
     <meta charset="UTF-8">
     <meta name="description" content="">
@@ -57,9 +68,21 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
+                <?php
+                if (isset($user)) {
+                ?>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Bienvenid@ <?php echo "$user"; ?></a></li>
+                            <li><a href="logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                <?php
+                }
+                ?>
                 <!-- User Login Info -->
-                <div class="user-login-info">
-                    <a href="login.php"><img src="assets/img/core-img/user.svg" alt=""></a>
+                <div class="user-login-info" id="userLoginInfo">
+                    <a href="#"><img src="assets/img/core-img/user.svg" alt=""></a>
                 </div>
                 <!-- Cart Area -->
                 <div class="cart-area">
@@ -360,6 +383,25 @@
         </div>
     </footer>
     <!-- ##### Footer Area End ##### -->
+
+    <script>
+        document.getElementById('userLoginInfo').addEventListener('click', function() {
+            <?php
+            // Verificar si el usuario ha iniciado sesión
+            if (!isset($_SESSION['user'])) {
+            ?>
+                // Si no está iniciado sesión, redirigir a login.php
+                window.location.href = 'login.php';
+            <?php
+            } else {
+            ?>
+                window.location.href = 'profile.php';
+            <?php
+            }
+            ?>
+            // Si está iniciada la sesión, enviar a profile.php
+        });
+    </script>
 
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="assets/js/jquery/jquery-2.2.4.min.js"></script>

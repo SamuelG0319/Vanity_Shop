@@ -5,6 +5,17 @@
 
     <?php
     require_once('dbconn.php');
+
+    session_start();
+
+    // Verificar si el usuario ha iniciado sesión
+    if (isset($_SESSION['user'])) {
+        // Si ha iniciado sesión, guarda los datos en variables de sesión
+        $user = $_SESSION['user'];
+        $name = $_SESSION['name'];
+        $last_name = $_SESSION['last_name'];
+        $cod_user = $_SESSION['cod_user'];
+    }
     ?>
     <meta charset="UTF-8">
     <meta name="description" content="">
@@ -57,9 +68,21 @@
 
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
+                <?php
+                if (isset($user)) {
+                ?>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Bienvenid@ <?php echo "$user"; ?></a></li>
+                            <li><a href="logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                <?php
+                }
+                ?>
                 <!-- User Login Info -->
-                <div class="user-login-info">
-                    <a href="login.php"><img src="assets/img/core-img/user.svg" alt=""></a>
+                <div class="user-login-info" id="userLoginInfo">
+                    <a href="#"><img src="assets/img/core-img/user.svg" alt=""></a>
                 </div>
                 <!-- Cart Area -->
                 <div class="cart-area">
@@ -181,7 +204,7 @@
                                 <ul>
                                     <?php
                                     // Obtener todas las marcas distintas
-                                    $brandQuery = "SELECT DISTINCT brand FROM products WHERE product_line = 'bottom'";
+                                    $brandQuery = "SELECT DISTINCT brand FROM products WHERE product_line = 'bottoms'";
                                     $brandStmt = $dbconn->query($brandQuery);
 
                                     // Verificar si hay marcas
@@ -214,7 +237,7 @@
                             $selectedBrand = isset($_GET['brand']) ? $_GET['brand'] : '';
 
                             // Construir la consulta SQL basada en la marca seleccionada
-                            $query = "SELECT * FROM products WHERE product_line = 'bottom'";
+                            $query = "SELECT * FROM products WHERE product_line = 'bottoms'";
                             if (!empty($selectedBrand)) {
                                 $query .= " AND brand = :brand";
                             }
@@ -282,7 +305,7 @@
                         <ul class="pagination mt-50 mb-70">
                             <?php
                             // Obtener el número total de productos sin límite
-                            $totalQuery = "SELECT COUNT(*) as total FROM products WHERE product_line = 'bottom'";
+                            $totalQuery = "SELECT COUNT(*) as total FROM products WHERE product_line = 'bottoms'";
                             $totalStmt = $dbconn->query($totalQuery);
                             $totalRow = $totalStmt->fetch(PDO::FETCH_ASSOC);
                             $totalProducts = $totalRow['total'];
@@ -348,11 +371,9 @@
             <div class="row mt-5">
                 <div class="col-md-12 text-center">
                     <p>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         Copyright &copy;<script>
                             document.write(new Date().getFullYear());
                         </script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://github.com/SamuelG0319/Vanity_Shop.git" target="_blank">Keily Marín, Samuel Lasso, Miguel Rodríguez & Carlos Serrano</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     </p>
                 </div>
             </div>
@@ -360,6 +381,25 @@
         </div>
     </footer>
     <!-- ##### Footer Area End ##### -->
+
+    <script>
+        document.getElementById('userLoginInfo').addEventListener('click', function() {
+            <?php
+            // Verificar si el usuario ha iniciado sesión
+            if (!isset($_SESSION['user'])) {
+            ?>
+                // Si no está iniciado sesión, redirigir a login.php
+                window.location.href = 'login.php';
+            <?php
+            } else {
+            ?>
+                window.location.href = 'profile.php';
+            <?php
+            }
+            ?>
+            // Si está iniciada la sesión, enviar a profile.php
+        });
+    </script>
 
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="assets/js/jquery/jquery-2.2.4.min.js"></script>
