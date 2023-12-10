@@ -9,12 +9,22 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['cod_user'])) {
         // Si ha iniciado sesión, guarda los datos en variables de sesión
         $user = $_SESSION['user'];
         $name = $_SESSION['name'];
         $lastname = $_SESSION['lastname'];
         $cod_user = $_SESSION['cod_user'];
+        $company_code = $_SESSION['company_code'];
+    }
+
+    // Verificar si el usuario que inició sesión es un administrador
+    if (isset($_SESSION['cod_admin'])) {
+        $user = $_SESSION['user'];
+        $name = $_SESSION['name'];
+        $lastname = $_SESSION['lastname'];
+        $cod_admin = $_SESSION['cod_admin'];
+        $position = $_SESSION['position'];
     }
 
     if (isset($_GET['id'])) {
@@ -90,6 +100,20 @@
                             <li><a href="bottom.php">Partes de abajo</a></li>
                             <li><a href="shoes.php">Zapatos</a></li>
                             <li><a href="accesories.php">Accesorios</a></li>
+                            <?php
+                            if (isset($cod_admin)) {
+                            ?>
+                                <li><a href="#">Administración</a></li>
+                            <?php
+                            }
+                            ?>
+                            <?php
+                            if (isset($company_code)) {
+                            ?>
+                                <li><a href="consulta.php">Consulta Empresarial</a></li>
+                            <?php
+                            }
+                            ?>
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -222,6 +246,13 @@
             <a href="cart.html">
                 <h2><?php echo $productDetails['name']; ?></h2>
             </a>
+            <?php
+            if (isset($company_code) || isset($cod_admin)) {
+            ?>
+                <span>Stock: <?php echo $productDetails['stock']; ?></span>
+            <?php
+            }
+            ?>
             <p class="product-price">
                 $<?php echo $productDetails['price']; ?>
             </p>

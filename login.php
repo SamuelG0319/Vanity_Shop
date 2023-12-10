@@ -18,7 +18,7 @@ if (isset($_POST['signin'])) {
 
                     /* - Getting user's data - */
                     $userCod = $getData['cod_user'];
-                    $companyCode = $getData['compny_code'];
+                    $companyCode = $getData['company_code'];
                     $name = $getData['name'];
                     $last_name = $getData['last_name'];
                     $email = $getData['email'];

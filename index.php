@@ -9,12 +9,22 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['cod_user'])) {
         // Si ha iniciado sesión, guarda los datos en variables de sesión
         $user = $_SESSION['user'];
         $name = $_SESSION['name'];
         $lastname = $_SESSION['lastname'];
         $cod_user = $_SESSION['cod_user'];
+        $company_code = $_SESSION['company_code'];
+    } 
+
+    // Verificar si el usuario que inició sesión es un administrador
+    if (isset($_SESSION['cod_admin'])) {
+        $user = $_SESSION['user'];
+        $name = $_SESSION['name'];
+        $lastname = $_SESSION['lastname'];
+        $cod_admin = $_SESSION['cod_admin'];
+        $position = $_SESSION['position'];
     }
     ?>
 
@@ -61,6 +71,20 @@
                             <li><a href="bottom.php">Partes de abajo</a></li>
                             <li><a href="shoes.php">Zapatos</a></li>
                             <li><a href="accesories.php">Accesorios</a></li>
+                            <?php
+                            if (isset($cod_admin)) {
+                            ?>
+                            <li><a href="#">Administración</a></li>
+                            <?php
+                            }
+                            ?>
+                            <?php
+                            if (isset($company_code)) {
+                            ?>
+                            <li><a href="consulta.php">Consulta Empresarial</a></li>
+                            <?php
+                            }
+                            ?>
                         </ul>
                     </div>
                     <!-- Nav End -->
@@ -74,7 +98,7 @@
                 ?>
                     <div class="classynav">
                         <ul>
-                            <li><a href="#">Bienvenid@ <?php echo "$user"; ?></a></li>
+                            <li><a href="#">Bienvenid@ <?php echo $name; ?></a></li>
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
@@ -372,7 +396,7 @@
                     <p>
                         Copyright &copy;<script>
                             document.write(new Date().getFullYear());
-                        </script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://github.com/SamuelG0319/Vanity_Shop.git" target="_blank">Keily Marín, Samuel Lasso, Miguel Rodríguez & Carlos Serrano</a> 
+                        </script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://github.com/SamuelG0319/Vanity_Shop.git" target="_blank">Keily Marín, Samuel Lasso, Miguel Rodríguez & Carlos Serrano</a>
                     </p>
                 </div>
             </div>
