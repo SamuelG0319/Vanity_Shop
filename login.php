@@ -17,14 +17,13 @@ if (isset($_POST['signin'])) {
                     session_start();
 
                     /* - Getting user's data - */
-                    foreach($getData as $userData){
-                        $userCod = $getData['cod_user'];
-                        $name = $getData['name'];
-                        $last_name = $getData['last_name'];
-                        $email = $getData['email'];
-                        $address = $getData['address'];
-                        $phone = $getData['phone'];
-                    }
+                    $userCod = $getData['cod_user'];
+                    $name = $getData['name'];
+                    $last_name = $getData['last_name'];
+                    $email = $getData['email'];
+                    $address = $getData['address'];
+                    $phone = $getData['phone'];
+
 
                     /* - Session variables - */
                     $_SESSION['cod_user'] = $userCod;
