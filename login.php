@@ -18,6 +18,7 @@ if (isset($_POST['signin'])) {
 
                     /* - Getting user's data - */
                     $userCod = $getData['cod_user'];
+                    $companyCode = $getData['compny_code'];
                     $name = $getData['name'];
                     $last_name = $getData['last_name'];
                     $email = $getData['email'];
@@ -27,6 +28,7 @@ if (isset($_POST['signin'])) {
 
                     /* - Session variables - */
                     $_SESSION['cod_user'] = $userCod;
+                    $_SESSION['company_code'] = $companyCode;
                     $_SESSION['user'] = $username;
                     $_SESSION['password'] = $password;
                     $_SESSION['name'] = $name;
