@@ -15,6 +15,28 @@ if (isset($_POST['signin'])) {
                 $getData = $verifyUser->fetch(PDO::FETCH_ASSOC);
                 if ($username == $getData['user'] && $password == $getData['password']) {
                     session_start();
+
+                    /* - Getting user's data - */
+                    foreach($getData as $userData){
+                        $userCod = $getData['cod_user'];
+                        $name = $getData['name'];
+                        $last_name = $getData['last_name'];
+                        $email = $getData['email'];
+                        $address = $getData['address'];
+                        $phone = $getData['phone'];
+                    }
+
+                    /* - Session variables - */
+                    $_SESSION['cod_user'] = $userCod;
+                    $_SESSION['user'] = $username;
+                    $_SESSION['password'] = $password;
+                    $_SESSION['name'] = $name;
+                    $_SESSION['lastname'] = $last_name;
+                    $_SESSION['email'] = $email;
+                    $_SESSION['address'] = $address;
+                    $_SESSION['phone'] = $phone;
+
+                    /* - Success message - */
                     echo json_encode(['status' => 'success', 'message' => 'Login exitoso']);
                     exit();
 
@@ -109,6 +131,7 @@ if (isset($_POST['signin'])) {
                     success: function (response) {
                         alert(response.message);
 
+                        /* - User found on db - */
                         if (response.status === "success") {
                             window.location.href = "index.php"
                             exit();
