@@ -213,6 +213,7 @@
                                         <option value="aus">Australia</option>
                                         <option value="bra">Brasil</option>
                                         <option value="cana">Canadá</option>
+                                        <option value="cana">Panamá</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-3">
