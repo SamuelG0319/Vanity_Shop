@@ -400,7 +400,6 @@ if (isset($_SESSION['cod_user'])) {
                                     // Crear un objeto Producto para cada producto
                                     $producto = new Producto($row['brand'], $row['name'], $row['stock'], $row['price'], $row['size'], $row['image']);
 
-                                    // Resto de tu lógica para mostrar productos
                             ?>
                                     <!-- Single Product -->
                                     <div class="col-12 col-sm-6 col-lg-4">
