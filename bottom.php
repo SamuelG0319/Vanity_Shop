@@ -19,6 +19,7 @@ if (isset($_SESSION['cod_user'])) {
     $userObject = new Usuario($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_user'], $_SESSION['company_code']);
     $company_code = $userObject->getCompanyCode();
     $cod_user = $_SESSION['cod_user'];
+    $checkIfUser = $_SESSION['user'];
 
     /* --- Verify if user already has a cart --- */
     $queryCheckCart = "SELECT cart_id FROM cart WHERE cod_user = :cod_user";
@@ -137,7 +138,8 @@ if (isset($_SESSION['cod_user'])) {
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px" width="100px"></a>
+                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px"
+                        width="100px"></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -157,17 +159,17 @@ if (isset($_SESSION['cod_user'])) {
                             <li><a href="accesories.php">Accesorios</a></li>
                             <?php
                             if (isset($cod_admin)) {
-                            ?>
+                                ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
                                 <li><a href="admin-side.php">Administración</a></li>
-                            <?php
+                                <?php
                             }
                             ?>
                             <?php
                             if (isset($company_code)) {
-                            ?>
+                                ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
-                            <?php
+                                <?php
                             }
                             ?>
                         </ul>
@@ -180,7 +182,7 @@ if (isset($_SESSION['cod_user'])) {
             <div class="header-meta d-flex clearfix justify-content-end">
                 <?php
                 if (isset($userObject)) {
-                ?>
+                    ?>
                     <div class="classynav">
                         <ul>
                             <li><a href="#">Bienvenid@
@@ -189,9 +191,9 @@ if (isset($_SESSION['cod_user'])) {
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
-                <?php
+                    <?php
                 } elseif (isset($adminObject)) {
-                ?>
+                    ?>
                     <div class="classynav">
                         <ul>
                             <li><a href="#">Bienvenid@
@@ -200,24 +202,31 @@ if (isset($_SESSION['cod_user'])) {
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
-                <?php
+                    <?php
                 }
                 ?>
                 <!-- User Login Info -->
                 <div class="user-login-info" id="userLoginInfo">
                     <a href="#"><img src="assets/img/core-img/user.svg" alt=""></a>
                 </div>
-                <!-- Cart Area -->
-                <div class="cart-area">
-                    <a href="#" id="essenceCartBtn"><img src="assets/img/core-img/bag.svg" alt="">
-                        <span>
-                            <?php
-                            if ($showTotalItems != null) {
-                                echo $showTotalItems['total'];
-                            } else {
-                                echo '';
-                            }
-                            ?>
+                
+                <?php
+                if (isset($cod_admin) || isset($checkIfUser) == '') {
+                    /* --- Nothing to show --- */
+                } else {
+                    ?>
+                    <!-- Cart Area -->
+                    <div class="cart-area">
+                        <a href="#" id="essenceCartBtn"><img src="assets/img/core-img/bag.svg" alt="">
+                            <span>
+                                <?php
+                                if ($showTotalItems != null) {
+                                    echo $showTotalItems['total'];
+                                } else {
+                                    echo '';
+                                }
+                }
+                ?>
                         </span></a>
                 </div>
             </div>
@@ -252,8 +261,8 @@ if (isset($_SESSION['cod_user'])) {
             <div class="cart-list">
                 <!-- Single Cart Item -->
                 <div class="cart-items">
-                    <?php if ($showProducts !== null) : ?>
-                        <?php foreach ($showProducts as $producto) : ?>
+                    <?php if ($showProducts !== null): ?>
+                        <?php foreach ($showProducts as $producto): ?>
                             <?php
                             $productObject = new Producto($producto['brand'], $producto['name'], $producto['stock'], $producto['price'], $producto['size'], $producto['image']);
                             ?>
@@ -264,7 +273,8 @@ if (isset($_SESSION['cod_user'])) {
                                         <img src="<?php echo $producto['image']; ?>" class="cart-thumb" alt="">
                                         <!-- Cart Item Desc -->
                                         <div class="cart-item-desc">
-                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove" value="">
+                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove"
+                                                value="">
                                             <span class="badge">
                                                 <?php echo $productObject->getBrand(); ?>
                                             </span>
@@ -282,7 +292,7 @@ if (isset($_SESSION['cod_user'])) {
                                 </div>
                             </form>
                         <?php endforeach; ?>
-                    <?php else : ?>
+                    <?php else: ?>
                         <p>No hay productos en el carrito.</p>
                     <?php endif; ?>
                 </div>
@@ -347,11 +357,11 @@ if (isset($_SESSION['cod_user'])) {
                                         // Iterar sobre las marcas y mostrar cada una
                                         while ($brandRow = $brandStmt->fetch(PDO::FETCH_ASSOC)) {
                                             $brand = $brandRow['brand'];
-                                    ?>
+                                            ?>
                                             <li><a href="?brand=<?php echo $brand; ?>">
                                                     <?php echo $brand; ?>
                                                 </a></li>
-                                    <?php
+                                            <?php
                                         }
                                     } else {
                                         echo "No hay marcas disponibles.";
@@ -400,15 +410,17 @@ if (isset($_SESSION['cod_user'])) {
                                     // Crear un objeto Producto para cada producto
                                     $producto = new Producto($row['brand'], $row['name'], $row['stock'], $row['price'], $row['size'], $row['image']);
 
-                            ?>
+                                    ?>
                                     <!-- Single Product -->
                                     <div class="col-12 col-sm-6 col-lg-4">
                                         <div class="single-product-wrapper">
                                             <!-- Product Image -->
                                             <div class="product-img">
-                                                <img src="<?php echo $producto->getImage(); ?>" alt="<?php echo $producto->getName(); ?>">
+                                                <img src="<?php echo $producto->getImage(); ?>"
+                                                    alt="<?php echo $producto->getName(); ?>">
                                                 <!-- Hover Thumb -->
-                                                <img class="hover-img" src="<?php echo $producto->getImage(); ?>" alt="<?php echo $producto->getName(); ?>">
+                                                <img class="hover-img" src="<?php echo $producto->getImage(); ?>"
+                                                    alt="<?php echo $producto->getName(); ?>">
                                             </div>
 
                                             <!-- Product Description -->
@@ -422,15 +434,16 @@ if (isset($_SESSION['cod_user'])) {
                                                     </h6>
                                                 </a>
                                                 <span>
-                                                    Talla: <?php echo $producto->getSize(); ?>
+                                                    Talla:
+                                                    <?php echo $producto->getSize(); ?>
                                                 </span>
                                                 <?php
                                                 if (isset($company_code) || isset($cod_admin)) {
-                                                ?>
+                                                    ?>
                                                     <span>Stock:
                                                         <?php echo $producto->getStock(); ?>
                                                     </span>
-                                                <?php
+                                                    <?php
                                                 }
                                                 ?>
                                                 <p class="product-price">
@@ -442,11 +455,16 @@ if (isset($_SESSION['cod_user'])) {
                                                 <div class="hover-content">
                                                     <!-- Form to get data from each product -->
                                                     <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                                        <input type="hidden" name="product_code" value="<?php echo $row['product_code']; ?>">
-                                                        <input type="hidden" name="product_name" value="<?php echo $row['name']; ?>">
-                                                        <input type="hidden" name="product_price" value="<?php echo $row['price']; ?>">
-                                                        <input type="hidden" name="product_size" value="<?php echo $row['size']; ?>">
-                                                        <input type="hidden" name="product_brand" value="<?php echo $row['brand']; ?>">
+                                                        <input type="hidden" name="product_code"
+                                                            value="<?php echo $row['product_code']; ?>">
+                                                        <input type="hidden" name="product_name"
+                                                            value="<?php echo $row['name']; ?>">
+                                                        <input type="hidden" name="product_price"
+                                                            value="<?php echo $row['price']; ?>">
+                                                        <input type="hidden" name="product_size"
+                                                            value="<?php echo $row['size']; ?>">
+                                                        <input type="hidden" name="product_brand"
+                                                            value="<?php echo $row['brand']; ?>">
                                                         <div class="add-to-cart-btn">
                                                             <button type="submit" name="add_cart" class="btn essence-btn">Add to
                                                                 Cart</button>
@@ -456,7 +474,7 @@ if (isset($_SESSION['cod_user'])) {
                                             </div>
                                         </div>
                                     </div>
-                            <?php
+                                    <?php
                                 }
                             } else {
                                 echo "No hay productos disponibles para la línea 'bottom'.";
@@ -480,11 +498,12 @@ if (isset($_SESSION['cod_user'])) {
 
                             // Iterar sobre las páginas
                             for ($i = 1; $i <= $totalPages; $i++) {
-                            ?>
-                                <li class="page-item"><a class="page-link" href="?page=<?php echo $i; ?>&brand=<?php echo $selectedBrand; ?>">
+                                ?>
+                                <li class="page-item"><a class="page-link"
+                                        href="?page=<?php echo $i; ?>&brand=<?php echo $selectedBrand; ?>">
                                         <?php echo $i; ?>
                                     </a></li>
-                            <?php
+                                <?php
                             }
                             ?>
 
@@ -525,11 +544,16 @@ if (isset($_SESSION['cod_user'])) {
                 <div class="col-12 col-md-6">
                     <div class="single_widget_area">
                         <div class="footer_social_area">
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i
+                                    class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i
+                                    class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i
+                                    class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i
+                                    class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i
+                                    class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -553,18 +577,18 @@ if (isset($_SESSION['cod_user'])) {
     <!-- ##### Footer Area End ##### -->
 
     <script>
-        document.getElementById('userLoginInfo').addEventListener('click', function() {
+        document.getElementById('userLoginInfo').addEventListener('click', function () {
             <?php
             // Verificar si el usuario ha iniciado sesión
             if (!isset($_SESSION['user'])) {
-            ?>
+                ?>
                 // Si no está iniciado sesión, redirigir a login.php
                 window.location.href = 'login.php';
-            <?php
+                <?php
             } else {
-            ?>
+                ?>
                 window.location.href = 'profile.php';
-            <?php
+                <?php
             }
             ?>
             // Si está iniciada la sesión, enviar a profile.php
@@ -590,10 +614,10 @@ if (isset($_SESSION['cod_user'])) {
             document.getElementById('delete_item').submit();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Agregar un evento de clic al botón de eliminación
-            document.querySelectorAll('.product-remove').forEach(function(removeButton) {
-                removeButton.addEventListener('click', function(event) {
+            document.querySelectorAll('.product-remove').forEach(function (removeButton) {
+                removeButton.addEventListener('click', function (event) {
                     event.preventDefault();
 
                     // Obtener el código del producto a eliminar
@@ -601,14 +625,14 @@ if (isset($_SESSION['cod_user'])) {
 
                     // Realizar la solicitud AJAX para eliminar el producto
                     fetch('index.php', {
-                            method: 'POST',
-                            body: new URLSearchParams({
-                                'product_code_to_remove': productCodeToRemove
-                            }),
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            }
-                        })
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            'product_code_to_remove': productCodeToRemove
+                        }),
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
                         .then(response => response.json())
                         .then(data => {
                             // Manejar la respuesta del servidor
