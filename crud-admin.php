@@ -9,7 +9,10 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['user'])) {
+    if (empty($_SESSION['user'])) {
+        header("location: admin-login.php");
+        exit;
+    } else {
         // Si ha iniciado sesión, solicita los datos de las variables de sesión
         $adminCod = $_SESSION['cod_admin'];
         $username = $_SESSION['user'];
@@ -84,7 +87,7 @@
                             <li><a href="#">Bienvenid@
                                     <?php echo "$username"; ?>
                                 </a></li>
-                            <li><a href="logout-admmin.php">Cerrar Sesión</a></li>
+                            <li><a href="logout-admin.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
                     <?php

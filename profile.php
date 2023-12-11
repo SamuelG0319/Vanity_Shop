@@ -9,7 +9,10 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['user'])) {
+    if (empty($_SESSION['user'])) {
+        header("location: index.php");
+        exit;
+    } else {
         // Si ha iniciado sesión, guarda los datos en variables de sesión
         $cod_user = $_SESSION['cod_user'];
         $user = $_SESSION['user'];
