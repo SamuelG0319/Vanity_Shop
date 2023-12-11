@@ -37,6 +37,8 @@ if (isset($_SESSION['cod_user'])) {
             $queryAddToCart = "INSERT INTO cart_item (cart_id, product_code) VALUES (:cart_id, :product_code)";
             $addToCart = $dbconn->prepare($queryAddToCart);
             $addToCart->execute(array(':cart_id' => $cart_id, ':product_code' => $productCode));
+            header("Location: single-product.php?id=" . $productCode);
+            exit();
         } else {
             /* --- User doesn't have a cart --- */
             $queryCreateCart = "INSERT INTO cart (cod_user, created_date) VALUES (:cod_user, NOW())";
@@ -51,6 +53,8 @@ if (isset($_SESSION['cod_user'])) {
             $queryAddToCart = "INSERT INTO cart_item (cart_id, product_code) VALUES (:cart_id, :product_code)";
             $addToCart = $dbconn->prepare($queryAddToCart);
             $addToCart->execute(array(':cart_id' => $cart_id, ':product_code' => $productCode));
+            header("Location: single-product.php?id=" . $productCode);
+            exit();
         }
     }
 
@@ -124,12 +128,10 @@ if (isset($_GET['id'])) {
         $productDetails = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
         echo "Producto no encontrado.";
-        // Puedes redirigir o mostrar un mensaje de error según tus necesidades
         exit();
     }
 } else {
     echo "Código de producto no proporcionado.";
-    // Puedes redirigir o mostrar un mensaje de error según tus necesidades
     exit();
 }
 ?>
@@ -149,7 +151,7 @@ if (isset($_GET['id'])) {
     </title>
 
     <!-- Favicon  -->
-    <link rel="icon" href="assets/img/core-img/favicon.ico">
+    <link rel="icon" href="assets/img/core-img/logo.ico">
 
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="assets/css/core-style.css">
@@ -164,8 +166,7 @@ if (isset($_GET['id'])) {
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px"
-                        width="100px"></a>
+                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px" width="100px"></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -185,17 +186,17 @@ if (isset($_GET['id'])) {
                             <li><a href="accesories.php">Accesorios</a></li>
                             <?php
                             if (isset($cod_admin)) {
-                                ?>
+                            ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
                                 <li><a href="#">Administración</a></li>
-                                <?php
+                            <?php
                             }
                             ?>
                             <?php
                             if (isset($company_code)) {
-                                ?>
+                            ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
-                                <?php
+                            <?php
                             }
                             ?>
                         </ul>
@@ -208,7 +209,7 @@ if (isset($_GET['id'])) {
             <div class="header-meta d-flex clearfix justify-content-end">
                 <?php
                 if (isset($userObject)) {
-                    ?>
+                ?>
                     <div class="classynav">
                         <ul>
                             <li><a href="#">Bienvenid@
@@ -217,9 +218,9 @@ if (isset($_GET['id'])) {
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
-                    <?php
+                <?php
                 } elseif (isset($adminObject)) {
-                    ?>
+                ?>
                     <div class="classynav">
                         <ul>
                             <li><a href="#">Bienvenid@
@@ -228,7 +229,7 @@ if (isset($_GET['id'])) {
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
-                    <?php
+                <?php
                 }
                 ?>
                 <!-- User Login Info -->
@@ -279,8 +280,8 @@ if (isset($_GET['id'])) {
             <div class="cart-list">
                 <!-- Single Cart Item -->
                 <div class="cart-items">
-                    <?php if ($showProducts !== null): ?>
-                        <?php foreach ($showProducts as $producto): ?>
+                    <?php if ($showProducts !== null) : ?>
+                        <?php foreach ($showProducts as $producto) : ?>
                             <?php
                             $productObject = new Producto($producto['brand'], $producto['name'], $producto['stock'], $producto['price'], $producto['size'], $producto['image']);
                             ?>
@@ -291,8 +292,7 @@ if (isset($_GET['id'])) {
                                         <img src="<?php echo $producto['image']; ?>" class="cart-thumb" alt="">
                                         <!-- Cart Item Desc -->
                                         <div class="cart-item-desc">
-                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove"
-                                                value="">
+                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove" value="">
                                             <span class="badge">
                                                 <?php echo $productObject->getBrand(); ?>
                                             </span>
@@ -310,7 +310,7 @@ if (isset($_GET['id'])) {
                                 </div>
                             </form>
                         <?php endforeach; ?>
-                    <?php else: ?>
+                    <?php else : ?>
                         <p>No hay productos en el carrito.</p>
                     <?php endif; ?>
                 </div>
@@ -354,22 +354,24 @@ if (isset($_GET['id'])) {
             <span>
                 <?php echo $productDetails['brand']; ?>
             </span>
-            <a href="cart.html">
+            <a href="#">
                 <h2>
                     <?php echo $productDetails['name']; ?>
                 </h2>
             </a>
+            <span>
+                Talla: <?php echo $productDetails['size']; ?>
+            </span>
             <?php
             if (isset($company_code) || isset($cod_admin)) {
-                ?>
+            ?>
                 <span>Stock:
                     <?php echo $productDetails['stock']; ?>
                 </span>
-                <?php
+            <?php
             }
             ?>
             <p class="product-price">
-                $
                 <?php echo $productDetails['price']; ?>
             </p>
 
@@ -422,16 +424,11 @@ if (isset($_GET['id'])) {
                 <div class="col-12 col-md-6">
                     <div class="single_widget_area">
                         <div class="footer_social_area">
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i
-                                    class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i
-                                    class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i
-                                    class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i
-                                    class="fa fa-pinterest" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i
-                                    class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -455,18 +452,18 @@ if (isset($_GET['id'])) {
     <!-- ##### Footer Area End ##### -->
 
     <script>
-        document.getElementById('userLoginInfo').addEventListener('click', function () {
+        document.getElementById('userLoginInfo').addEventListener('click', function() {
             <?php
             // Verificar si el usuario ha iniciado sesión
             if (!isset($_SESSION['user'])) {
-                ?>
+            ?>
                 // Si no está iniciado sesión, redirigir a login.php
                 window.location.href = 'login.php';
-                <?php
+            <?php
             } else {
-                ?>
+            ?>
                 window.location.href = 'profile.php';
-                <?php
+            <?php
             }
             ?>
             // Si está iniciada la sesión, enviar a profile.php
@@ -492,10 +489,10 @@ if (isset($_GET['id'])) {
             document.getElementById('delete_item').submit();
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Agregar un evento de clic al botón de eliminación
-            document.querySelectorAll('.product-remove').forEach(function (removeButton) {
-                removeButton.addEventListener('click', function (event) {
+            document.querySelectorAll('.product-remove').forEach(function(removeButton) {
+                removeButton.addEventListener('click', function(event) {
                     event.preventDefault();
 
                     // Obtener el código del producto a eliminar
@@ -503,14 +500,14 @@ if (isset($_GET['id'])) {
 
                     // Realizar la solicitud AJAX para eliminar el producto
                     fetch('index.php', {
-                        method: 'POST',
-                        body: new URLSearchParams({
-                            'product_code_to_remove': productCodeToRemove
-                        }),
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        }
-                    })
+                            method: 'POST',
+                            body: new URLSearchParams({
+                                'product_code_to_remove': productCodeToRemove
+                            }),
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        })
                         .then(response => response.json())
                         .then(data => {
                             // Manejar la respuesta del servidor
