@@ -3,7 +3,6 @@ require_once('dbconn.php');
 require_once('user.php');
 require_once('admin.php');
 require_once('products.php');
-
 session_start();
 
 $userObject = null;
