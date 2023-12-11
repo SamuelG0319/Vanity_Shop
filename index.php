@@ -17,6 +17,7 @@ if (isset($_SESSION['cod_user'])) {
     $userObject = new Usuario($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_user'], $_SESSION['company_code']);
     $company_code = $userObject->getCompanyCode();
     $cod_user = $_SESSION['cod_user'];
+    $checkIfUser = $_SESSION['user'];
 
     /* --- Verify if user already has a cart --- */
     $queryCheckCart = "SELECT cart_id FROM cart WHERE cod_user = :cod_user";
@@ -208,8 +209,8 @@ if (isset($_SESSION['cod_user'])) {
                 </div>
                 <!-- Cart Area -->
                 <?php
-                if (isset($cod_admin)) {
-                    
+                if (isset($cod_admin) || isset($checkIfUser) == '') {
+                    /* --- Nothing to show --- */
                 } else {
                 ?>
                 <div class="cart-area">
