@@ -84,7 +84,7 @@
                             <li><a href="#">Bienvenid@
                                     <?php echo "$username"; ?>
                                 </a></li>
-                            <li><a href="logout-admmin.php">Cerrar Sesión</a></li>
+                            <li><a href="logout-admin.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
                     <?php
