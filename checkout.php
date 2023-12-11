@@ -164,7 +164,7 @@
                 ?>
                 <!-- User Login Info -->
                 <div class="user-login-info" id="userLoginInfo">
-                    <a href="login.php"><img src="assets/img/core-img/user.svg" alt=""></a>
+                    <a href="profile.php"><img src="assets/img/core-img/user.svg" alt=""></a>
                 </div>
             </div>
         </div>
