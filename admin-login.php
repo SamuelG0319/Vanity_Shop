@@ -1,55 +1,73 @@
 <?php
+
 require_once('dbconn.php');
-global $dbnconn;
+
+class AdminAuthentication
+{
+    private $dbconn;
+
+    public function __construct($dbconn)
+    {
+        $this->dbconn = $dbconn;
+    }
+
+    public function signIn($username, $password)
+    {
+        if (empty($username) || empty($password)) {
+            return json_encode(['status' => 'error', 'message' => 'Llena los campos']);
+        }
+
+        $verifyAdmin = $this->dbconn->prepare("SELECT * FROM admin WHERE username = :username");
+        $verifyAdmin->execute(['username' => $username]);
+
+        if ($verifyAdmin->rowCount() > 0) {
+            $getAdmData = $verifyAdmin->fetch(PDO::FETCH_ASSOC);
+
+            if ($username == $getAdmData['username'] && $password == $getAdmData['password']) {
+                session_start();
+
+                /* - Getting admin's data - */
+                $adminCod = $getAdmData['cod_admin'];
+                $name = $getAdmData['name'];
+                $last_name = $getAdmData['last_name'];
+                $phone = $getAdmData['phone'];
+                $email = $getAdmData['email'];
+                $position = $getAdmData['position'];
+
+                /* - Session variables - */
+                $_SESSION['cod_admin'] = $adminCod;
+                $_SESSION['user'] = $username;
+                $_SESSION['password'] = $password;
+                $_SESSION['name'] = $name;
+                $_SESSION['lastname'] = $last_name;
+                $_SESSION['phone'] = $phone;
+                $_SESSION['email'] = $email;
+                $_SESSION['position'] = $position;
+
+                /* - Success message - */
+                return json_encode(['status' => 'success', 'message' => 'Bienvenidos administrador']);
+            }
+        }
+
+        return json_encode(['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos']);
+    }
+}
+
+// Uso de la clase
+$adminAuth = new AdminAuthentication($dbconn);
 
 if (isset($_POST['signin'])) {
     if (isset($_POST['username']) && isset($_POST['password'])) {
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
-        if (!empty($username) && !empty($password)) {
-            $verifyAdmin = $dbconn->prepare("SELECT * FROM admin WHERE username = :username");
-            $verifyAdmin->execute(['username' => $username]);
-
-            if ($verifyAdmin->rowCount() > 0) {
-                $getAdmData = $verifyAdmin->fetch(PDO::FETCH_ASSOC);
-                if ($username == $getAdmData['username'] && $password == $getAdmData['password']) {
-                    session_start();
-
-                    /* - Getting admin's data - */
-                    $adminCod = $getAdmData['cod_admin'];
-                    $name = $getAdmData['name'];
-                    $last_name = $getAdmData['last_name'];
-                    $phone = $getAdmData['phone'];
-                    $email = $getAdmData['email'];
-                    $position = $getAdmData['position'];
-
-                    /* - Session variables - */
-                    $_SESSION['cod_admin'] = $adminCod;
-                    $_SESSION['user'] = $username;
-                    $_SESSION['password'] = $password;
-                    $_SESSION['name'] = $name;
-                    $_SESSION['lastname'] = $last_name;
-                    $_SESSION['phone'] = $phone;
-                    $_SESSION['email'] = $email;
-                    $_SESSION['position'] = $position;
-
-                    /* - Success message - */
-                    echo json_encode(['status' => 'success', 'message' => 'Bienvenidos administrador']);
-                    exit();
-
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos']);
-                exit();
-            }
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Llena los campos']);
-            exit();
-        }
+        echo $adminAuth->signIn($username, $password);
+        exit();
     }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -60,7 +78,7 @@ if (isset($_POST['signin'])) {
 
     <!-- ---------- link references ---------- -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <link rel="icon" type="image/png" href="assets/img/sign-up/home.ico" />
+    <link rel="icon" type="image/png" href="assets/img/sign-up/home.ico" /><link rel="icon" type="image/png" href="assets/img/sign-up/home.ico" />
 
     <!-- ---------- CSS References ----------- -->
     <link rel="stylesheet" type="text/css" href="assets/css/util.css">
@@ -104,36 +122,6 @@ if (isset($_POST['signin'])) {
 
     <!-- JavaScript section -->
     <script src="assets/js/admin-login.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#login-form").submit(function (e) {
-                e.preventDefault();
-
-                var username = $("#username").val();
-                var password = $("#password").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "admin-login.php",
-                    data: {
-                        signin: true,
-                        username: username,
-                        password: password
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        alert(response.message);
-
-                        /* - User found on db - */
-                        if (response.status === "success") {
-                            window.location.href = "admin-side.php"
-                            exit();
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 
 </html>

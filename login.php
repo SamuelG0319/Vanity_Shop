@@ -77,6 +77,7 @@ if (isset($_POST['signin'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/img/sign-up/home.ico" />
     <title>Login</title>
 
     <!-- link references -->
@@ -129,35 +130,7 @@ if (isset($_POST['signin'])) {
     </section>
 
     <!-- JavaScript section -->
-    <script>
-        $(document).ready(function () {
-            $("#login-form").submit(function (e) {
-                e.preventDefault();
-
-                var username = $("#username").val();
-                var password = $("#password").val();
-
-                $.ajax({
-                    type: "POST",
-                    url: "login.php",
-                    data: {
-                        signin: true,
-                        username: username,
-                        password: password
-                    },
-                    dataType: 'json',
-                    success: function (response) {
-                        alert(response.message);
-
-                        /* - User found on db - */
-                        if (response.status === "success") {
-                            window.location.href = "index.php";
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <script src="assets/js/user-login.js"></script>
 </body>
 
 </html>

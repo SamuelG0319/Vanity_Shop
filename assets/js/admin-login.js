@@ -1,4 +1,3 @@
-
 (function ($) {
     "use strict";
 
@@ -85,3 +84,33 @@
 
 
 })(jQuery);
+
+/* -------------------- Admin login form -------------------- */
+$(document).ready(function () {
+    $("#login-form").submit(function (e) {
+        e.preventDefault();
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+
+        $.ajax({
+            type: "POST",
+            url: "admin-login.php",
+            data: {
+                signin: true,
+                username: username,
+                password: password
+            },
+            dataType: 'json',
+            success: function (response) {
+                alert(response.message);
+
+                /* - User found on db - */
+                if (response.status === "success") {
+                    window.location.href = "admin-side.php"
+                    exit();
+                }
+            }
+        });
+    });
+});
