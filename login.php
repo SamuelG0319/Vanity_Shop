@@ -1,51 +1,69 @@
 <?php
 require_once('dbconn.php');
-global $dbnconn;
 
+class Usuario
+{
+    private $dbconn;
+
+    public function __construct($dbconn)
+    {
+        $this->dbconn = $dbconn;
+    }
+
+    public function login($username, $password)
+    {
+        $verifyUser = $this->dbconn->prepare("SELECT * FROM user WHERE user = :user");
+        $verifyUser->execute(['user' => $username]);
+
+        if ($verifyUser->rowCount() > 0) {
+            $userData = $verifyUser->fetch(PDO::FETCH_ASSOC);
+            if ($username == $userData['user'] && $password == $userData['password']) {
+                session_start();
+
+                /* - Getting user's data - */
+                $userCod = $userData['cod_user'];
+                $companyCode = $userData['company_code'];
+                $name = $userData['name'];
+                $last_name = $userData['last_name'];
+                $email = $userData['email'];
+                $address = $userData['address'];
+                $phone = $userData['phone'];
+
+                /* - Session variables - */
+                $_SESSION['cod_user'] = $userCod;
+                $_SESSION['company_code'] = $companyCode;
+                $_SESSION['user'] = $username;
+                $_SESSION['password'] = $password;
+                $_SESSION['name'] = $name;
+                $_SESSION['lastname'] = $last_name;
+                $_SESSION['email'] = $email;
+                $_SESSION['address'] = $address;
+                $_SESSION['phone'] = $phone;
+
+                /* - Success message - */
+                return ['status' => 'success', 'message' => 'Login exitoso'];
+            }
+        }
+
+        return ['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos'];
+    }
+}
+
+/* --- Instance of user --- */
+$usuario = new Usuario($dbconn);
+
+/* --- Verify if login form was send --- */
 if (isset($_POST['signin'])) {
     if (isset($_POST['username']) && isset($_POST['password'])) {
         $username = trim($_POST['username']);
         $password = trim($_POST['password']);
 
         if (!empty($username) && !empty($password)) {
-            $verifyUser = $dbconn->prepare("SELECT * FROM user WHERE user = :user");
-            $verifyUser->execute(['user' => $username]);
+            $loginResult = $usuario->login($username, $password);
 
-            if ($verifyUser->rowCount() > 0) {
-                $getData = $verifyUser->fetch(PDO::FETCH_ASSOC);
-                if ($username == $getData['user'] && $password == $getData['password']) {
-                    session_start();
-
-                    /* - Getting user's data - */
-                    $userCod = $getData['cod_user'];
-                    $companyCode = $getData['company_code'];
-                    $name = $getData['name'];
-                    $last_name = $getData['last_name'];
-                    $email = $getData['email'];
-                    $address = $getData['address'];
-                    $phone = $getData['phone'];
-
-
-                    /* - Session variables - */
-                    $_SESSION['cod_user'] = $userCod;
-                    $_SESSION['company_code'] = $companyCode;
-                    $_SESSION['user'] = $username;
-                    $_SESSION['password'] = $password;
-                    $_SESSION['name'] = $name;
-                    $_SESSION['lastname'] = $last_name;
-                    $_SESSION['email'] = $email;
-                    $_SESSION['address'] = $address;
-                    $_SESSION['phone'] = $phone;
-
-                    /* - Success message - */
-                    echo json_encode(['status' => 'success', 'message' => 'Login exitoso']);
-                    exit();
-
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Usuario o Contraseña incorrectos']);
-                exit();
-            }
+            /* --- Return JSON answer --- */
+            echo json_encode($loginResult);
+            exit();
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Llena los campos']);
             exit();
@@ -54,7 +72,6 @@ if (isset($_POST['signin'])) {
 }
 ?>
 <!DOCTYPE html>
-
 <html lang="es" dir="ltr">
 
 <head>
@@ -74,7 +91,7 @@ if (isset($_POST['signin'])) {
 </head>
 
 <body>
-    <!-- ----- Sing in  Form ----- -->
+    <!-- ----- Sing in Form ----- -->
     <section class="sign-in">
         <div class="container">
             <div class="signin-content">
@@ -83,7 +100,7 @@ if (isset($_POST['signin'])) {
                 </div>
 
                 <div class="signin-form">
-                    <h2 class="form-title">Sign up</h2>
+                    <h2 class="form-title">Iniciar sesión</h2>
                     <form method="POST" class="register-form" id="login-form">
                         <!-- ----- Username field ----- -->
                         <div class="form-group">
@@ -134,8 +151,7 @@ if (isset($_POST['signin'])) {
 
                         /* - User found on db - */
                         if (response.status === "success") {
-                            window.location.href = "index.php"
-                            exit();
+                            window.location.href = "index.php";
                         }
                     }
                 });
