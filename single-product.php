@@ -98,6 +98,7 @@ if (isset($_SESSION['cod_user'])) {
         $removeItem = $dbconn->prepare($queryRemoveItem);
         $removeItem->execute(array(':product_code' => $productCodeToRemove, ':cod_user' => $cod_user));
         
+        header("Location: single-product.php?id=" . $productCode);
         $success = true;
         echo json_encode(['success' => $success]);
         exit;
