@@ -1,31 +1,116 @@
+<?php
+require_once('dbconn.php');
+require_once('user.php');
+require_once('admin.php');
+require_once('products.php');
+
+session_start();
+
+$userObject = null;
+$adminObject = null;
+$productObject = null;
+
+$showProducts = [];
+$showTotalItems = [];
+
+// Verificar si el usuario ha iniciado sesión
+if (isset($_SESSION['cod_user'])) {
+    // Si ha iniciado sesión, guarda los datos en variables de sesión
+    $userObject = new Usuario($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_user'], $_SESSION['company_code']);
+    $company_code = $userObject->getCompanyCode();
+    $cod_user = $_SESSION['cod_user'];
+
+    /* --- Verify if user already has a cart --- */
+    $queryCheckCart = "SELECT cart_id FROM cart WHERE cod_user = :cod_user";
+    $checkCart = $dbconn->prepare($queryCheckCart);
+    $checkCart->bindParam(':cod_user', $cod_user);
+    $checkCart->execute();
+
+    /* --- Verify if add_cart form was sent or user open his cart --- */
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_cart']) || isset($_POST['rightSideCart'])) {
+        /* --- Get form's data --- */
+        $productCode = $_POST['product_code'];
+
+        if ($checkCart->rowCount() > 0) {
+            /* --- User has a cart --- */
+            $cartRow = $checkCart->fetch(PDO::FETCH_ASSOC);
+            $cart_id = $cartRow['cart_id'];
+
+            /* --- Insert item into the cart --- */
+            $queryAddToCart = "INSERT INTO cart_item (cart_id, product_code) VALUES (:cart_id, :product_code)";
+            $addToCart = $dbconn->prepare($queryAddToCart);
+            $addToCart->execute(array(':cart_id' => $cart_id, ':product_code' => $productCode));
+        } else {
+            /* --- User doesn't have a cart --- */
+            $queryCreateCart = "INSERT INTO cart (cod_user, created_date) VALUES (:cod_user, NOW())";
+            $createCart = $dbconn->prepare($queryCreateCart);
+            $createCart->bindParam(':cod_user', $cod_user);
+            $createCart->execute();
+
+            /* --- Get id of the cart --- */
+            $cart_id = $dbconn->lastInsertId();
+
+            /* --- Insert item into the cart --- */
+            $queryAddToCart = "INSERT INTO cart_item (cart_id, product_code) VALUES (:cart_id, :product_code)";
+            $addToCart = $dbconn->prepare($queryAddToCart);
+            $addToCart->execute(array(':cart_id' => $cart_id, ':product_code' => $productCode));
+        }
+    }
+
+    /* --- Bring items on the cart --- */
+    $queryBringProducts = "SELECT p.name, p.price, p.size, p.brand, p.image, p.product_code, p.stock
+    FROM products p
+    INNER JOIN cart_item ci ON p.product_code = ci.product_code
+    INNER JOIN cart c ON ci.cart_id = c.cart_id
+    INNER JOIN user u ON u.cod_user = c.cod_user
+    WHERE u.cod_user = :cod_user";
+    $bringProducts = $dbconn->prepare($queryBringProducts);
+    $bringProducts->execute(array(':cod_user' => $cod_user));
+    $showProducts = $bringProducts->fetchAll(PDO::FETCH_ASSOC);
+
+    /* --- Total of items on cart --- */
+    $queryTotal = "SELECT COUNT(*) as total FROM cart_item ci
+    INNER JOIN cart c ON ci.cart_id = c.cart_id
+    INNER JOIN user u ON u.cod_user = c.cod_user
+    WHERE u.cod_user = :cod_user";
+    $totalItems = $dbconn->prepare($queryTotal);
+    $totalItems->execute(array(':cod_user' => $cod_user));
+    $showTotalItems = $totalItems->fetch(PDO::FETCH_ASSOC);
+
+    /* --- Receipt --- */
+    $queryReceipt = "SELECT SUM(p.price) as total_price
+    FROM products p
+    INNER JOIN cart_item ci ON p.product_code = ci.product_code
+    INNER JOIN cart c ON ci.cart_id = c.cart_id
+    INNER JOIN user u ON u.cod_user = c.cod_user
+    WHERE u.cod_user = :cod_user";
+    $totalPrice = $dbconn->prepare($queryReceipt);
+    $totalPrice->execute(array(':cod_user' => $cod_user));
+    $receipt = $totalPrice->fetch(PDO::FETCH_ASSOC);
+
+    /* --- Delete item from cart --- */
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_code_to_remove'])) {
+        $productCodeToRemove = $_POST['product_code_to_remove'];
+
+        /* --- Delete the item in the database --- */
+        $queryRemoveItem = "DELETE FROM cart_item WHERE product_code = :product_code AND cart_id IN (SELECT cart_id FROM cart WHERE cod_user = :cod_user)";
+        $removeItem = $dbconn->prepare($queryRemoveItem);
+        $removeItem->execute(array(':product_code' => $productCodeToRemove, ':cod_user' => $cod_user));
+
+        $success = true;
+        echo json_encode(['success' => $success]);
+        exit;
+    }
+} elseif (isset($_SESSION['cod_admin'])) {
+    $adminObject = new Administrador($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_admin'], $_SESSION['position']);
+    $cod_admin = $_SESSION['cod_admin'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
-    <?php
-    require_once('dbconn.php');
-    session_start();
-
-    // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['cod_user'])) {
-        // Si ha iniciado sesión, guarda los datos en variables de sesión
-        $user = $_SESSION['user'];
-        $name = $_SESSION['name'];
-        $lastname = $_SESSION['lastname'];
-        $cod_user = $_SESSION['cod_user'];
-        $company_code = $_SESSION['company_code'];
-    }
-
-    // Verificar si el usuario que inició sesión es un administrador
-    if (isset($_SESSION['cod_admin'])) {
-        $user = $_SESSION['user'];
-        $name = $_SESSION['name'];
-        $lastname = $_SESSION['lastname'];
-        $cod_admin = $_SESSION['cod_admin'];
-        $position = $_SESSION['position'];
-    }
-    ?>
-
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -77,6 +162,7 @@
                             <?php
                             if (isset($cod_admin)) {
                             ?>
+                                <li><a href="consulta.php">Consulta Empresarial</a></li>
                                 <li><a href="#">Administración</a></li>
                             <?php
                             }
@@ -97,11 +183,24 @@
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
                 <?php
-                if (isset($user)) {
+                if (isset($userObject)) {
                 ?>
                     <div class="classynav">
                         <ul>
-                            <li><a href="#">Bienvenid@ <?php echo $name; ?></a></li>
+                            <li><a href="#">Bienvenid@
+                                    <?php echo $userObject->getUser(); ?>
+                                </a></li>
+                            <li><a href="logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                <?php
+                } elseif (isset($adminObject)) {
+                ?>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Bienvenid@
+                                    <?php echo $adminObject->getUser(); ?>
+                                </a></li>
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
@@ -114,13 +213,106 @@
                 </div>
                 <!-- Cart Area -->
                 <div class="cart-area">
-                    <a href="#" id="essenceCartBtn"><img src="assets/img/core-img/bag.svg" alt=""> <span>3</span></a>
+                    <a href="#" id="essenceCartBtn"><img src="assets/img/core-img/bag.svg" alt="">
+                        <span>
+                            <?php
+                            if ($showTotalItems != null) {
+                                echo $showTotalItems['total'];
+                            } else {
+                                echo '';
+                            }
+                            ?>
+                        </span></a>
                 </div>
             </div>
 
         </div>
     </header>
     <!-- ##### Header Area End ##### -->
+
+    <!-- ================================================== CART ================================================== -->
+    <div class="cart-bg-overlay"></div>
+
+    <div class="right-side-cart-area">
+
+        <!-- Cart Button -->
+        <div class="cart-button">
+            <a href="#" id="rightSideCart"><img src="assets/img/core-img/bag.svg" alt="">
+                <span>
+                    <?php
+                    if ($showTotalItems != null) {
+                        echo $showTotalItems['total'];
+                    } else {
+                        echo '';
+                    }
+                    ?>
+                </span>
+            </a>
+        </div>
+
+        <div class="cart-content d-flex">
+
+            <!-- Cart List Area -->
+            <div class="cart-list">
+                <!-- Single Cart Item -->
+                <div class="cart-items">
+                    <?php if ($showProducts !== null) : ?>
+                        <?php foreach ($showProducts as $producto) : ?>
+                            <?php
+                            $productObject = new Producto($producto['brand'], $producto['name'], $producto['stock'], $producto['price'], $producto['size'], $producto['image']);
+                            ?>
+                            <!-- Single Cart Item -->
+                            <form method="POST" id="delete_item" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                <div class="single-cart-item" onclick="submitForm('<?php echo $producto['product_code']; ?>')">
+                                    <a href="#" class="product-image">
+                                        <img src="<?php echo $producto['image']; ?>" class="cart-thumb" alt="">
+                                        <!-- Cart Item Desc -->
+                                        <div class="cart-item-desc">
+                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove" value="">
+                                            <span class="badge">
+                                                <?php echo $productObject->getBrand(); ?>
+                                            </span>
+                                            <h6>
+                                                <?php echo $productObject->getName(); ?>
+                                            </h6>
+                                            <p class="size">Size:
+                                                <?php echo $productObject->getSize(); ?>
+                                            </p>
+                                            <p class="price">$
+                                                <?php echo $productObject->getPrice(); ?>
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </form>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p>No hay productos en el carrito.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-amount-summary">
+
+                <h2>Factura</h2>
+                <ul class="summary-table">
+                    <li><span>subtotal:</span> <span>
+                            <?php echo $receipt['total_price']; ?>
+                        </span></li>
+                    <li><span>delivery:</span> <span>Free</span></li>
+                    <li><span>discount:</span> <span>-15%</span></li>
+                    <li><span>total:</span> <span>
+                            <?php echo number_format($receipt['total_price'] * 0.85, 2); ?>
+                        </span></li>
+                </ul>
+                <div class="checkout-btn mt-100">
+                    <a href="checkout.html" class="btn essence-btn">check out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ========================================================================================================== -->
 
     <!-- ##### Blog Wrapper Area Start ##### -->
     <div class="single-blog-wrapper">
@@ -221,6 +413,61 @@
                 }
             });
         }
+    </script>
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="assets/js/jquery/jquery-2.2.4.min.js"></script>
+    <!-- Popper js -->
+    <script src="assets/js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Plugins js -->
+    <script src="assets/js/plugins.js"></script>
+    <!-- Classy Nav js -->
+    <script src="assets/js/classy-nav.min.js"></script>
+    <!-- Active js -->
+    <script src="assets/js/active.js"></script>
+
+    <script>
+        function submitForm(productCode) {
+            document.getElementById('product_code_to_remove').value = productCode;
+            document.getElementById('delete_item').submit();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar un evento de clic al botón de eliminación
+            document.querySelectorAll('.product-remove').forEach(function(removeButton) {
+                removeButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    // Obtener el código del producto a eliminar
+                    var productCodeToRemove = this.dataset.productCode;
+
+                    // Realizar la solicitud AJAX para eliminar el producto
+                    fetch('index.php', {
+                            method: 'POST',
+                            body: new URLSearchParams({
+                                'product_code_to_remove': productCodeToRemove
+                            }),
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Manejar la respuesta del servidor
+                            if (data.success) {
+                                // Eliminar visualmente el producto de la interfaz
+                                var cartItem = this.closest('.single-cart-item');
+                                cartItem.parentNode.removeChild(cartItem);
+                            } else {
+                                alert('Error al eliminar el producto.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+        });
     </script>
 
 </body>
