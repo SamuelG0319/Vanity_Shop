@@ -533,6 +533,7 @@ if (isset($_SESSION['cod_user'])) {
                                 <li><a href="bottom.php">Partes de abajo</a></li>
                                 <li><a href="shoes.php">Zapatos</a></li>
                                 <li><a href="accesories.php">Accesorios</a></li>
+                                <li><a href="admin-login.php">Admin</a></li>
                             </ul>
                         </div>
                     </div>
