@@ -9,13 +9,13 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['user_name'])) {
+    if (isset($_SESSION['user'])) {
         // Si ha iniciado sesión, solicita los datos de las variables de sesión
         $adminCod = $_SESSION['cod_admin'];
         $username = $_SESSION['user'];
         $password = $_SESSION['password'];
         $name = $_SESSION['name'];
-        $last_name = $_SESSION['last_name'];
+        $last_name = $_SESSION['lastname'];
         $phone = $_SESSION['phone'];
         $email = $_SESSION['email'];
         $position = $_SESSION['position'];
