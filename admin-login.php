@@ -126,7 +126,7 @@ if (isset($_POST['signin'])) {
 
                         /* - User found on db - */
                         if (response.status === "success") {
-                            window.location.href = "index.php"
+                            window.location.href = "admin-side.php"
                             exit();
                         }
                     }
