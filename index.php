@@ -95,8 +95,6 @@ if (isset($_SESSION['cod_user'])) {
         echo json_encode(['success' => $success]);
         exit;
     }
-
-
 }
 
 // Verificar si el usuario que inició sesión es un administrador
@@ -297,8 +295,6 @@ if (isset($_SESSION['cod_admin'])) {
         </div>
     </div>
     <!-- ========================================================================================================== -->
-
-    <!-- ##### Right Side Cart End ##### -->
 
     <!-- ##### Welcome Area Start ##### -->
     <section class="welcome_area bg-img background-overlay" style="background-image: url(assets/img/bg-img/bg-1.jpg);">
