@@ -9,7 +9,11 @@
     session_start();
 
     // Verificar si el usuario ha iniciado sesión
-    if (isset($_SESSION['admin'])) {
+    if (empty($_SESSION['user'])) {
+        header("location: admin-login.php");
+        exit;
+    } else {
+
         // Si ha iniciado sesión, solicita los datos de las variables de sesión
         $adminCod = $_SESSION['cod_admin'];
         $username = $_SESSION['user'];
