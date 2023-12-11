@@ -1,6 +1,11 @@
 <?php
 require_once('dbconn.php');
+require_once('user.php');
+require_once('admin.php');
 session_start();
+
+$userObject = null;
+$adminObject = null;
 
 $showProducts = [];
 $showTotalItems = [];
@@ -8,11 +13,9 @@ $showTotalItems = [];
 // Verificar si el usuario ha iniciado sesión
 if (isset($_SESSION['cod_user'])) {
     // Si ha iniciado sesión, guarda los datos en variables de sesión
-    $user = $_SESSION['user'];
-    $name = $_SESSION['name'];
-    $lastname = $_SESSION['lastname'];
+    $userObject = new Usuario($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_user'], $_SESSION['company_code']);
+    $company_code = $userObject->getCompanyCode();
     $cod_user = $_SESSION['cod_user'];
-    $company_code = $_SESSION['company_code'];
 
     /* --- Verify if user already has a cart --- */
     $queryCheckCart = "SELECT cart_id FROM cart WHERE cod_user = :cod_user";
@@ -95,15 +98,9 @@ if (isset($_SESSION['cod_user'])) {
         echo json_encode(['success' => $success]);
         exit;
     }
-}
-
-// Verificar si el usuario que inició sesión es un administrador
-if (isset($_SESSION['cod_admin'])) {
-    $user = $_SESSION['user'];
-    $name = $_SESSION['name'];
-    $lastname = $_SESSION['lastname'];
+} elseif (isset($_SESSION['cod_admin'])) {
+    $adminObject = new Administrador($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_admin'], $_SESSION['position']);
     $cod_admin = $_SESSION['cod_admin'];
-    $position = $_SESSION['position'];
 }
 ?>
 
@@ -136,8 +133,7 @@ if (isset($_SESSION['cod_admin'])) {
             <!-- Classy Menu -->
             <nav class="classy-navbar" id="essenceNav">
                 <!-- Logo -->
-                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px"
-                        width="100px"></a>
+                <a class="nav-brand" href="index.php"><img src="assets/img/core-img/logo.png" alt="" height="100px" width="100px"></a>
                 <!-- Navbar Toggler -->
                 <div class="classy-navbar-toggler">
                     <span class="navbarToggler"><span></span><span></span><span></span></span>
@@ -157,16 +153,17 @@ if (isset($_SESSION['cod_admin'])) {
                             <li><a href="accesories.php">Accesorios</a></li>
                             <?php
                             if (isset($cod_admin)) {
-                                ?>
+                            ?>
+                                <li><a href="consulta.php">Consulta Empresarial</a></li>
                                 <li><a href="#">Administración</a></li>
-                                <?php
+                            <?php
                             }
                             ?>
                             <?php
                             if (isset($company_code)) {
-                                ?>
+                            ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
-                                <?php
+                            <?php
                             }
                             ?>
                         </ul>
@@ -178,17 +175,24 @@ if (isset($_SESSION['cod_admin'])) {
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
                 <?php
-                if (isset($user)) {
-                    ?>
+                if (isset($userObject)) {
+                ?>
                     <div class="classynav">
                         <ul>
-                            <li><a href="#">Bienvenid@
-                                    <?php echo $name; ?>
-                                </a></li>
+                            <li><a href="#">Bienvenid@ <?php echo $userObject->getUser(); ?></a></li>
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
-                    <?php
+                <?php
+                } elseif (isset($adminObject)) {
+                ?>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Bienvenid@ <?php echo $adminObject->getUser(); ?></a></li>
+                            <li><a href="logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                <?php
                 }
                 ?>
                 <!-- User Login Info -->
@@ -240,8 +244,8 @@ if (isset($_SESSION['cod_admin'])) {
             <div class="cart-list">
                 <!-- Single Cart Item -->
                 <div class="cart-items">
-                    <?php if ($showProducts !== null): ?>
-                        <?php foreach ($showProducts as $producto): ?>
+                    <?php if ($showProducts !== null) : ?>
+                        <?php foreach ($showProducts as $producto) : ?>
                             <!-- Single Cart Item -->
                             <form method="POST" id="delete_item" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                                 <div class="single-cart-item" onclick="submitForm('<?php echo $producto['product_code']; ?>')">
@@ -249,8 +253,7 @@ if (isset($_SESSION['cod_admin'])) {
                                         <img src="<?php echo $producto['image']; ?>" class="cart-thumb" alt="">
                                         <!-- Cart Item Desc -->
                                         <div class="cart-item-desc">
-                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove"
-                                                value="">
+                                            <input type="hidden" name="product_code_to_remove" id="product_code_to_remove" value="">
                                             <span class="badge">
                                                 <?php echo $producto['brand']; ?>
                                             </span>
@@ -268,7 +271,7 @@ if (isset($_SESSION['cod_admin'])) {
                                 </div>
                             </form>
                         <?php endforeach; ?>
-                    <?php else: ?>
+                    <?php else : ?>
                         <p>No hay productos en el carrito.</p>
                     <?php endif; ?>
                 </div>
@@ -319,8 +322,7 @@ if (isset($_SESSION['cod_admin'])) {
 
                 <!-- Single Category -->
                 <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img"
-                        style="background-image: url(assets/img/bg-img/bg-2.jpg);">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-2.jpg);">
                         <div class="catagory-content">
                             <a href="tops.php">Partes de arriba</a>
                         </div>
@@ -328,8 +330,7 @@ if (isset($_SESSION['cod_admin'])) {
                 </div>
                 <!-- Single Category -->
                 <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img"
-                        style="background-image: url(assets/img/bg-img/bg-5.jpg);">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-5.jpg);">
                         <div class="catagory-content">
                             <a href="bottom.php">Partes de abajo</a>
                         </div>
@@ -337,8 +338,7 @@ if (isset($_SESSION['cod_admin'])) {
                 </div>
                 <!-- Single Category -->
                 <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img"
-                        style="background-image: url(assets/img/bg-img/bg-3.jpg);">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-3.jpg);">
                         <div class="catagory-content">
                             <a href="shoes.php">Zapatos</a>
                         </div>
@@ -346,8 +346,7 @@ if (isset($_SESSION['cod_admin'])) {
                 </div>
                 <!-- Single Category -->
                 <div class="col-12 col-sm-6 col-md-4">
-                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img"
-                        style="background-image: url(assets/img/bg-img/bg-4.jpg);">
+                    <div class="single_catagory_area d-flex align-items-center justify-content-center bg-img" style="background-image: url(assets/img/bg-img/bg-4.jpg);">
                         <div class="catagory-content">
                             <a href="accesories.php">Accesorios</a>
                         </div>
@@ -384,15 +383,14 @@ if (isset($_SESSION['cod_admin'])) {
                         if ($stmt->rowCount() > 0) {
                             // Iterar sobre los productos y mostrar cada uno
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                ?>
+                        ?>
                                 <!-- Single Product -->
                                 <div class="single-product-wrapper">
                                     <!-- Product Image -->
                                     <div class="product-img">
                                         <img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
                                         <!-- Hover Thumb -->
-                                        <img class="hover-img" src="<?php echo $row['image']; ?>"
-                                            alt="<?php echo $row['name']; ?>">
+                                        <img class="hover-img" src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
                                     </div>
                                     <!-- Product Description -->
                                     <div class="product-description">
@@ -412,8 +410,7 @@ if (isset($_SESSION['cod_admin'])) {
                                         <div class="hover-content">
                                             <!-- Form to get data from each product -->
                                             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                                <input type="hidden" name="product_code"
-                                                    value="<?php echo $row['product_code']; ?>">
+                                                <input type="hidden" name="product_code" value="<?php echo $row['product_code']; ?>">
                                                 <input type="hidden" name="product_name" value="<?php echo $row['name']; ?>">
                                                 <input type="hidden" name="product_price" value="<?php echo $row['price']; ?>">
                                                 <input type="hidden" name="product_size" value="<?php echo $row['size']; ?>">
@@ -426,7 +423,7 @@ if (isset($_SESSION['cod_admin'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <?php
+                        <?php
                             }
                         } else {
                             echo "No hay productos disponibles.";
@@ -497,16 +494,11 @@ if (isset($_SESSION['cod_admin'])) {
                 <div class="col-12 col-md-6">
                     <div class="single_widget_area">
                         <div class="footer_social_area">
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i
-                                    class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i
-                                    class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i
-                                    class="fa fa-twitter" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i
-                                    class="fa fa-pinterest" aria-hidden="true"></i></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i
-                                    class="fa fa-youtube-play" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Pinterest"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                            <a href="#" data-toggle="tooltip" data-placement="top" title="Youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
@@ -530,18 +522,18 @@ if (isset($_SESSION['cod_admin'])) {
     <!-- ##### Footer Area End ##### -->
 
     <script>
-        document.getElementById('userLoginInfo').addEventListener('click', function () {
+        document.getElementById('userLoginInfo').addEventListener('click', function() {
             <?php
             // Verificar si el usuario ha iniciado sesión
             if (!isset($_SESSION['user'])) {
-                ?>
+            ?>
                 // Si no está iniciado sesión, redirigir a login.php
                 window.location.href = 'login.php';
-                <?php
+            <?php
             } else {
-                ?>
+            ?>
                 window.location.href = 'profile.php';
-                <?php
+            <?php
             }
             ?>
             // Si está iniciada la sesión, enviar a profile.php
@@ -566,10 +558,10 @@ if (isset($_SESSION['cod_admin'])) {
             document.getElementById('product_code_to_remove').value = productCode;
             document.getElementById('delete_item').submit();
         }
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Agregar un evento de clic al botón de eliminación
-            document.querySelectorAll('.product-remove').forEach(function (removeButton) {
-                removeButton.addEventListener('click', function (event) {
+            document.querySelectorAll('.product-remove').forEach(function(removeButton) {
+                removeButton.addEventListener('click', function(event) {
                     event.preventDefault();
 
                     // Obtener el código del producto a eliminar
@@ -577,10 +569,14 @@ if (isset($_SESSION['cod_admin'])) {
 
                     // Realizar la solicitud AJAX para eliminar el producto
                     fetch('delete_item.php', { // Cambiado a 'delete_item.php'
-                        method: 'POST',
-                        body: new URLSearchParams({ 'product_code_to_remove': productCodeToRemove }),
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                    })
+                            method: 'POST',
+                            body: new URLSearchParams({
+                                'product_code_to_remove': productCodeToRemove
+                            }),
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        })
                         .then(response => response.json())
                         .then(data => {
                             // Manejar la respuesta del servidor
@@ -598,7 +594,6 @@ if (isset($_SESSION['cod_admin'])) {
                 });
             });
         });
-
     </script>
 
 </body>

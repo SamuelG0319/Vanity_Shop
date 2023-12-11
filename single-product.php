@@ -5,26 +5,24 @@
 
     <?php
     require_once('dbconn.php');
+    require_once('user.php');
+    require_once('admin.php');
+    require_once('products.php');
 
     session_start();
+
+    $userObject = null;
+    $adminObject = null;
 
     // Verificar si el usuario ha iniciado sesión
     if (isset($_SESSION['cod_user'])) {
         // Si ha iniciado sesión, guarda los datos en variables de sesión
-        $user = $_SESSION['user'];
-        $name = $_SESSION['name'];
-        $lastname = $_SESSION['lastname'];
+        $userObject = new Usuario($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_user'], $_SESSION['company_code']);
+        $company_code = $userObject->getCompanyCode();
         $cod_user = $_SESSION['cod_user'];
-        $company_code = $_SESSION['company_code'];
-    }
-
-    // Verificar si el usuario que inició sesión es un administrador
-    if (isset($_SESSION['cod_admin'])) {
-        $user = $_SESSION['user'];
-        $name = $_SESSION['name'];
-        $lastname = $_SESSION['lastname'];
+    } elseif (isset($_SESSION['cod_admin'])) {
+        $adminObject = new Administrador($_SESSION['user'], $_SESSION['name'], $_SESSION['lastname'], $_SESSION['cod_admin'], $_SESSION['position']);
         $cod_admin = $_SESSION['cod_admin'];
-        $position = $_SESSION['position'];
     }
 
     if (isset($_GET['id'])) {
@@ -103,6 +101,7 @@
                             <?php
                             if (isset($cod_admin)) {
                             ?>
+                                <li><a href="consulta.php">Consulta Empresarial</a></li>
                                 <li><a href="#">Administración</a></li>
                             <?php
                             }
@@ -123,11 +122,20 @@
             <!-- Header Meta Data -->
             <div class="header-meta d-flex clearfix justify-content-end">
                 <?php
-                if (isset($user)) {
+                if (isset($userObject)) {
                 ?>
                     <div class="classynav">
                         <ul>
-                            <li><a href="#">Bienvenid@ <?php echo "$user"; ?></a></li>
+                            <li><a href="#">Bienvenid@ <?php echo $userObject->getUser(); ?></a></li>
+                            <li><a href="logout.php">Cerrar Sesión</a></li>
+                        </ul>
+                    </div>
+                <?php
+                } elseif (isset($adminObject)) {
+                ?>
+                    <div class="classynav">
+                        <ul>
+                            <li><a href="#">Bienvenid@ <?php echo $adminObject->getUser(); ?></a></li>
                             <li><a href="logout.php">Cerrar Sesión</a></li>
                         </ul>
                     </div>
