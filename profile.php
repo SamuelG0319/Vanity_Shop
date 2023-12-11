@@ -205,19 +205,6 @@
 
     <!-- ##### Process Area Start ##### -->
     <?php
-    /* Comprobamos que se han enviado datos
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-        global $dbconn;
-        // Sentencia SQL de actualización
-        $sql = "UPDATE user SET user=$user, password=$password, name=$name, last_name=$lastname, email=$email, address=$address, phone=$phone WHERE user=$user";
-        // Ejecutar la consulta
-        if ($dbconn->query($sql) === TRUE) {
-            echo "Registro actualizado correctamente";
-        } else {
-            echo "Error al actualizar el registro: ";
-        }
-    }*/
 
     try {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -258,8 +245,6 @@
             // Ejecutar la consulta
             $stmt->execute();
 
-        } else {
-            echo "Error al actualizar el registro: ";
         }
     } catch (PDOException $e) {
         echo "Error al actualizar el registro: " . $e->getMessage();
