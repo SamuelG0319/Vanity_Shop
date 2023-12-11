@@ -576,6 +576,7 @@ if (isset($_SESSION['cod_user'])) {
             document.getElementById('product_code_to_remove').value = productCode;
             document.getElementById('delete_item').submit();
         }
+
         document.addEventListener('DOMContentLoaded', function () {
             // Agregar un evento de clic al botón de eliminación
             document.querySelectorAll('.product-remove').forEach(function (removeButton) {
@@ -586,7 +587,7 @@ if (isset($_SESSION['cod_user'])) {
                     var productCodeToRemove = this.dataset.productCode;
 
                     // Realizar la solicitud AJAX para eliminar el producto
-                    fetch('delete_item.php', { // Cambiado a 'delete_item.php'
+                    fetch('index.php', { // Cambiado a 'delete_item.php'
                         method: 'POST',
                         body: new URLSearchParams({
                             'product_code_to_remove': productCodeToRemove
