@@ -100,7 +100,7 @@
     if ($result->rowCount() > 0) {
         // Mostrar la tabla HTML
         echo "<table border='1' style='display: flex; justify-content: center; text-aling: center; aling-items:center; padding: 5px;'>
-            <tr style=''>
+            <tr>
                 <th style='padding: 5px; text-align: center;'>Order ID</th>
                 <th style='padding: 5px; text-align: center;'>Cod User</th>
                 <th style='padding: 5px; text-align: center;'>Order Time</th>
@@ -111,7 +111,7 @@
 
         // Mostrar los datos de la tabla
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr style=''>
+            echo "<tr>
                 <td style='padding: 5px; text-align: center;'>" . $row["order_id"] . "</td>
                 <td style='padding: 5px; text-align: center;'>" . $row["cod_user"] . "</td>
                 <td style='padding: 5px; text-align: center;'>" . $row["order_time"] . "</td>
@@ -125,5 +125,8 @@
     } else {
         echo "No se encontraron resultados en la tabla.";
     }
-
     ?>
+
+</body>
+
+</html>
