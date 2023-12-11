@@ -8,6 +8,11 @@
     require_once('admin.php');
     session_start();
 
+    if (empty($_SESSION["user"])) {
+        header("location: index.php");
+        exit;
+    }
+
     $userObject = null;
     $adminObject = null;
 
