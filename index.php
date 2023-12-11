@@ -566,7 +566,6 @@ if (isset($_SESSION['cod_admin'])) {
             document.getElementById('product_code_to_remove').value = productCode;
             document.getElementById('delete_item').submit();
         }
-
         document.addEventListener('DOMContentLoaded', function () {
             // Agregar un evento de clic al botón de eliminación
             document.querySelectorAll('.product-remove').forEach(function (removeButton) {
@@ -577,7 +576,7 @@ if (isset($_SESSION['cod_admin'])) {
                     var productCodeToRemove = this.dataset.productCode;
 
                     // Realizar la solicitud AJAX para eliminar el producto
-                    fetch('index.php', {
+                    fetch('delete_item.php', { // Cambiado a 'delete_item.php'
                         method: 'POST',
                         body: new URLSearchParams({ 'product_code_to_remove': productCodeToRemove }),
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
@@ -590,13 +589,16 @@ if (isset($_SESSION['cod_admin'])) {
                                 var cartItem = this.closest('.single-cart-item');
                                 cartItem.parentNode.removeChild(cartItem);
                             } else {
-                                alert('Error al eliminar el producto.');
+                                // Muestra un mensaje de error en algún elemento en tu página
+                                var errorMessageElement = document.getElementById('error-message');
+                                errorMessageElement.textContent = 'Error al eliminar el producto.';
                             }
                         })
                         .catch(error => console.error('Error:', error));
                 });
             });
         });
+
     </script>
 
 </body>
