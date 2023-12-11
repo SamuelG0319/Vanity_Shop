@@ -6,14 +6,16 @@ class Producto
     private $name;
     private $stock;
     private $price;
+    private $size;
     private $image;
 
-    public function __construct($brand, $name, $stock, $price, $image)
+    public function __construct($brand, $name, $stock, $price, $size, $image)
     {
         $this->brand = $brand;
         $this->name = $name;
         $this->stock = $stock;
         $this->price = $price;
+        $this->size = $size;
         $this->image = $image;
     }
 
@@ -36,6 +38,11 @@ class Producto
     public function getPrice()
     {
         return $this->price;
+    }
+
+    public function getSize()
+    {
+        return $this->size;
     }
 
     public function getImage()
@@ -62,6 +69,11 @@ class Producto
     public function setPrice($price)
     {
         $this->price = $price;
+    }
+
+    public function setSize($size)
+    {
+        $this->price = $size;
     }
 
     public function setImage($image)
