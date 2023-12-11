@@ -159,7 +159,7 @@ if (isset($_SESSION['cod_user'])) {
                             if (isset($cod_admin)) {
                             ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
-                                <li><a href="#">Administración</a></li>
+                                <li><a href="admin-side.php">Administración</a></li>
                             <?php
                             }
                             ?>

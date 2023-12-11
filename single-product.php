@@ -97,7 +97,7 @@ if (isset($_SESSION['cod_user'])) {
         $queryRemoveItem = "DELETE FROM cart_item WHERE product_code = :product_code AND cart_id IN (SELECT cart_id FROM cart WHERE cod_user = :cod_user)";
         $removeItem = $dbconn->prepare($queryRemoveItem);
         $removeItem->execute(array(':product_code' => $productCodeToRemove, ':cod_user' => $cod_user));
-
+        
         $success = true;
         echo json_encode(['success' => $success]);
         exit;
@@ -188,7 +188,7 @@ if (isset($_GET['id'])) {
                             if (isset($cod_admin)) {
                             ?>
                                 <li><a href="consulta.php">Consulta Empresarial</a></li>
-                                <li><a href="#">Administración</a></li>
+                                <li><a href="admin-side.php">Administración</a></li>
                             <?php
                             }
                             ?>
